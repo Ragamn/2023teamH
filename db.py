@@ -9,8 +9,7 @@ config = {
     }
 #パスワードをハッシュする関数
 def get_hash(password):
-    b_pw = bytes(password, 'utf-8')
-    hashed_password  = hashlib.pbkdf2_hmac('sha256', b_pw,1000).hex()
+    hashed_password  = hashlib.sha256(password.encode()).hexdigest()
     return hashed_password
 
 #ユーザを登録する関数
