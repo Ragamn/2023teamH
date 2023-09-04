@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = ''.join(random.choices(string.ascii_letters,k=256))
 
 @app.route('/')
-def register():
+def index():
   return render_template('index.html')
 
 @app.route('/register')
@@ -32,7 +32,7 @@ def register_exe():
     error = 'パスワードが未入力です'
     return render_template('register.html', error=error)
   
-  count = db.insert_user(accountname, mail, password)
+  count = db.register_user(accountname, mail, password)
   
   if count == 1:
     msg = '登録が完了しました。'
