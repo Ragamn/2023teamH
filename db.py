@@ -1,9 +1,11 @@
+from dotenv import load_dotenv
 import os,mysql.connector,string,random,hashlib
+load_dotenv()
 config = {
-    "user": "root",
-    "password": "Trsm1107",
-    "host": "localhost",
-    "database": "anunaki"
+    "user": os.getenv("USER"),
+    "password": os.getenv("PASS"),
+    "host": os.getenv("HOST"),
+    "database": os.getenv("DATABASSE")
     }
 #パスワードをハッシュする関数
 def get_hash(password):
@@ -36,3 +38,29 @@ def register_user(user_name,user_mail,password):
         connection.close()
 
     return count
+
+#ログイン関数
+def user_login(user_mail,password):
+    flg = False
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = 'SELECT user_pass FROM user WHERE user_mail = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_mail,))
+        get_pass = cursor.fetchone()
+        hashed_password = get_hash(password)
+        if hashed_password == get_pass[0]:
+            flg = True
+    except mysql.connector.Error:
+        flg = False
+    except Exception:
+        flg = False
+    finally:
+        cursor.close()
+        connection.close()
+
+    return flg
