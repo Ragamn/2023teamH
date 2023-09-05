@@ -6,6 +6,8 @@ nltk.download('averaged_perceptron_tagger')
 
 def emotion_analysis(text):
     blob = TextBlob(text)
+
+    # if blob.detect_language():
     tags = blob.tags
     senti = blob.sentiment
     # pol = senti.polarity
@@ -18,4 +20,4 @@ def emotion_analysis(text):
     return senti
 
 
-print(emotion_analysis("I am so sadness"))
+print(emotion_analysis("I am so sad"))
