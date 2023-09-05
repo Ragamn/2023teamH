@@ -81,6 +81,7 @@ def home():
     posts = Post.query.filter_by(is_deleted=False).order_by(Post.timestamp.desc()).all()
     return render_template('home.html', posts=posts)
 
+
 # 投稿を削除
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
