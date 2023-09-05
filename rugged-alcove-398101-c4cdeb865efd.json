@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "rugged-alcove-398101",
+  "private_key_id": "c4cdeb865efd18159cb92b01810aecc5c99b046b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDOMv/au3Q0JDRt\nXNcArO6Mr2M2OwTlvFMx/Xm8BmRsnKRClcjCMqEk4PgJmsy4orIsARJ1LQ+PRRJM\n1Pv6EhIPNu6/toEokCESQUk1Z2+Dp26/Wzxihmu5IHVpt375JzMdnCZPLtPvIQlt\nFtk8isnWIZORMLRjplURu0iEiXKGgj+yAcgzaG0sKGXUjJxGPlTu/DF2FSe4LA7I\ngpaWSx++tr+z4dO1ZPMsbtZmKbKQThk1U6Ersv0FzLgL47QBdZuHCPfxoW+iqzFn\nlKX3ZhUV3a1e7y1erHWXzGJwywM9PZ9AxAAR2lHInuk29xZugUCp7QnCVhf2HABo\n5kJrJfb7AgMBAAECggEAYiW3UAt639i91bJjqnAl6fQPosAL8DgoV3qh56QZR/N1\nYjY+hWUo+89TcOrseBQE/9oQyZKFvfmwIL8eIyVX0EMi+EDsEH0uKKzHpnJSC5X2\nKoJIZ1M5UjiHeqb7eqe0dmsddwJAoamVfYXrKBydvt1jiq/mpSoGgvakqWVtDGV2\nZGjxteO7hHeGTAU7LKzcljtaWbAx+7MQNmsuGtcMQLKJKtP+d5EVggf/0t/R7UAl\n68L8eZ3diMt1KP/Y0iGDBCULgnBiC3sAjVjAXNuQ1iuUcD3DvuOwEFPYVI88iEqi\nEG+d/mr7IBUwwXrt6TH8/l0mR0olwWXPIBSd5EIvnQKBgQD5y12fql4ZU8DWlQV7\nrJC5RtXCA3uCFe6lkqSM2rxgbI/SRBHrJzXekuwGDaUoC76xFZ0GOObKokoWBi/5\n3icBIZb+mhRL8+svHzm7U/zVXklug0aNkg2Nmuf6CJ6u6b4Bp3JKLeAcSYFSAzT+\nUfTCDnZAXgSwMlYMDHIS0keDtQKBgQDTUmDlcZ6G1t+oEY3ruNWI9Ap6ndDNTy5G\nUPMtjuu5FPcv1UsXPfsKvhuv5vERA8k9vNdcIFIhiQKipGixFyE+gYcRVpFCXCNe\nqDax81TZkFcMWAxVjqhT5mxhm8q+iATrmQSlsc+QKpbhi0zgYCOUhSH7ndnNZhDi\nbTShXayd7wKBgQC6hA5RVR3UHYSE9VrVwMGDho+/wWfsd0HtobR6dC1qdkVhhHA4\nvNttaRkRYAjtAPAPPAs2hTBXJ5zYGyChmy5WmuUrEJONLwFx+wfZh1nnW/LKsPzy\nYpb6ICuMt/j8tA2rIIOnPd/0XzJPsZNVPo7ag3/qiglIIx26+2QGB7tcbQKBgBMk\nxlRiy5qpgo9mL7YoA2gpu31KKK1AvA9wq+b3qJEWviHeL7RGUCSz/iwcPsBs2GE4\nZ0YYQ3h4Qf3b6QQJ9WAFOegvMG+Tizy6/mF2irw+4DPlEhD6IHOhTzY0d9R03AU/\n0nT0O7pysUJzbR5ydyawPNjffuilk2f/vqHTq5yPAoGBAIaIMbapgyShs7HDZnXa\nwI3mZ42jrHDw7XYpHUZ0yQvIPRM8GoQt2zETt4WLxJpUYKbVkZqJ4012sClzBfCg\nIRezALL79FufG2rl+rj/XGLG8O2/VLnvfn1v5G1TRVXw5JrPhaOtBISSzAUjw4Iu\nb4/790qNfcIEyrzCS/4FhYhX\n-----END PRIVATE KEY-----\n",
+  "client_email": "hakkin@rugged-alcove-398101.iam.gserviceaccount.com",
+  "client_id": "110964775283928606502",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hakkin%40rugged-alcove-398101.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
