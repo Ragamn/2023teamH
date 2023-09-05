@@ -1,5 +1,5 @@
 from flask import Flask, render_template,request,redirect,url_for,session
-import db,string,random,os
+import db,string,random,os,admin_db
 from datetime import timedelta
 from werkzeug.utils import secure_filename
 from sqlalchemy import or_
@@ -48,13 +48,13 @@ def register_exe():
 def login():
   return render_template('login.html')
 
-@app.route('/login_exe',methods=['POST'])
-def login_exe():
+@app.route('/home',methods=['POST'])
+def home():
     mail = request.form.get('mail')
     password = request.form.get('password')
   
   # ログイン判定
-    if db.login(mail, password):
+    if db.user_login(mail, password):
       session['user'] = True # session にキー：'user', バリュー:True を追加
       session.permanent = True # session の有効期限を有効化
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
@@ -70,7 +70,7 @@ def login_exe():
           'password':password
         }
         return render_template('index.html',error=error,data=input_data)
-      
+
  
   
 #登録管理＿削除機能
@@ -93,9 +93,6 @@ def delete_post(post_id):
     
     flash('投稿が削除されました', 'success')
     return redirect(url_for('home'))
-  
-  
-  
   
 if __name__ == '__main__':
   app.run(debug=True)
