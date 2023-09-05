@@ -63,3 +63,53 @@ def user_login(user_mail,password):
         connection.close()
 
     return flg
+
+#利用者投稿関数(画像,動画がない場合)
+def user_post(user_id,post,prefecture_id):
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,'/img/test1.png',default)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post,prefecture_id))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error:
+        count = 0
+    except Exception:
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count
+
+#利用者投稿関数(画像,動画がある場合)
+def user_post_img(user_id,post,prefecture_id,media_path):
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,%s,default)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post,prefecture_id,media_path))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error:
+        count = 0
+    except Exception:
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count
