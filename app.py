@@ -41,5 +41,32 @@ def register_exe():
     error = '登録に失敗しました。'
   return render_template('register.html',error=error)
 
+@app.route('/login')
+def login():
+  return render_template('login.html')
+
+@app.route('/login_exe',methods=['POST'])
+def login_exe():
+    mail = request.form.get('mail')
+    password = request.form.get('password')
+  
+  # ログイン判定
+    if db.login(mail, password):
+      session['user'] = True # session にキー：'user', バリュー:True を追加
+      session.permanent = True # session の有効期限を有効化
+      app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+      if mail == 's.kubota.sys22@morijyobi.ac.jp':
+        return redirect(url_for('post'))
+      else:
+        return render_template('post.html')
+    else :
+        error = 'ログインに失敗しました。'
+        # dictで返すことでフォームの入力量が増えても可読性が下がらない。
+        input_data = {
+          'mail':mail,
+          'password':password
+        }
+        return render_template('index.html',error=error,data=input_data)
+      
 if __name__ == '__main__':
-    app.run(debug=True)
+  app.run(debug=True)

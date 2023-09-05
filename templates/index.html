@@ -4,8 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/index.css">
 </head>
+
 <body>
-    <a href="{{url_for('register')}}">新規登録</a>
+    <header>
+        <h1>Anunaki</h1>
+    </header>
+    <div>
+        <h1>Anunakiとは</h1>
+        <p>文章を投稿すると、その内容からあなたの感情を分析くれるSNSです</p>
+        <a href="{{url_for('register')}}">新規登録</a>
+        <a href="{{url_for('login')}}">ログイン</a>
+    </div>
 </body>
 </html>
