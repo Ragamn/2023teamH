@@ -20,7 +20,7 @@ def user_login(admin_mail,password):
         
         connection = mysql.connector.connect(**config)
 
-        query = 'SELECT admin_pass FROM user WHERE admin_mail = %s'
+        query = 'SELECT admin_pass FROM admin WHERE admin_mail = %s'
 
         # クエリの実行
         cursor = connection.cursor()
