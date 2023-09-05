@@ -5,7 +5,7 @@ config = {
     "user": os.getenv("USER"),
     "password": os.getenv("PASS"),
     "host": os.getenv("HOST"),
-    "database": os.getenv("DATABASSE")
+    "database": os.getenv("DATABASE")
     }
 
 #パスワードをハッシュ
@@ -38,3 +38,21 @@ def user_login(admin_mail,password):
         connection.close()
 
     return flg
+
+# ユーザ一覧
+def get_users():
+    connection = mysql.connector.connect(**config)
+    query = 'SELECT user_name FROM user where flag = 0'
+    cursor = connection.cursor()
+    cursor.execute(query,())
+    cursor.close()
+    connection.close()
+    
+# ユーザ削除
+def user_delete(user_name):
+    connection = mysql.connector.connect(**config)
+    query = 'update user set flag = 1 where user_name = %s'
+    cursor = connection.cursor()
+    cursor.execute(query,(user_name,))
+    cursor.close()
+    connection.close()
