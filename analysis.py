@@ -18,15 +18,17 @@ def translate_text(text, target_language):
 def emotion_analysis(text):
     blob = TextBlob(text)
     result = translate_client.detect_language(text)
-    if result["language"] == "ja":
+    print(f"lang={result}")
+    if result["language"] == 'ja':
+        print('ok')
         tags = blob.tags
         senti = blob.sentiment
         pol = senti.polarity
         Subjectivity = senti.subjectivity
         senti_str = f"Polarity: {senti.polarity}, Subjectivity: {senti.subjectivity}"
 
-        for tag in tags:
-            print(f"{tag[0]} ({tag[1]})")
+        # for tag in tags:
+        #     print(f"{tag[0]} ({tag[1]})")
 
         return senti
     return 0
