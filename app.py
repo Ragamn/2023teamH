@@ -82,6 +82,8 @@ def post():
 def register_post():
     if 'user' in session:
       post = request.form.get('post')
+      # latitude = request.form['latitude']
+      # longitude = request.form['longitude']
       latitude = request.form.get('latitude')
       longitude = request.form.get('longitude')
       file = request.files['file']
@@ -140,6 +142,14 @@ def register_post():
       # JSONデータから都道府県名を取得する
       # location_dataには緯度経度空取得したjsonのデータが入っている
       location_data = db. get_location_from_latlng(latitude, longitude)
+      print("")
+      print("緯度経度")
+      print(latitude)
+      print(longitude)
+      print("中身だった")
+      print("")
+      print("ここでエラー")
+      print(location_data)
       province = location_data.get('address', {}).get('province', '')
 
       # 県番号を取得する

@@ -17,7 +17,6 @@
         function successCallback(position) {
             var gl_text = "緯度：" + position.coords.latitude + "<br>";
             gl_text += "経度：" + position.coords.longitude + "<br>";
-            document.getElementById("show_result").innerHTML = gl_text;
 
             // フォームの隠しフィールドに位置情報を設定
             document.getElementById("latitude").value = position.coords.latitude;

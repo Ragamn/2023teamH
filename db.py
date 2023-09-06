@@ -103,10 +103,10 @@ def user_post_img(user_id,post,prefecture_id,media_path):
         count = cursor.rowcount
         connection.commit()
 
-    except mysql.connector.Error:
+    except mysql.connector.Error as err:
         print(f"MySQLエラー: {err}")
         count = 0
-    except Exception:
+    except Exception as e:
         print(f"エラー: {e}")
         count = 0
     finally:
