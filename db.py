@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-import os,mysql.connector,string,random,hashlib
+import os,mysql.connector,hashlib,requests
 load_dotenv()
 config = {
     "user": os.getenv("USER"),
@@ -104,8 +104,10 @@ def user_post_img(user_id,post,prefecture_id,media_path):
         connection.commit()
 
     except mysql.connector.Error:
+        print(f"MySQLエラー: {err}")
         count = 0
     except Exception:
+        print(f"エラー: {e}")
         count = 0
     finally:
         # カーソルを閉じる
@@ -113,3 +115,41 @@ def user_post_img(user_id,post,prefecture_id,media_path):
         connection.close()
 
     return count
+
+#ユーザID取得関数
+def get_user_id(user_mail):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT user_id FROM user WHERE user_mail = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query, (user_mail,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def get_location_from_latlng(latitude, longitude):
+    base_url = "https://nominatim.openstreetmap.org/reverse"
+    params = {
+        "format": "json",
+        "lat": latitude,
+        "lon": longitude,
+    }
+    
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()  # HTTPエラーレスポンスがあれば例外を発生させます。
+        data = response.json()
+        return data
+    except requests.exceptions.RequestException as e:
+        return f"エラーが発生しました: {str(e)}"
