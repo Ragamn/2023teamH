@@ -1,20 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/register.css">
+
 </head>
 <body>
-    <h3>ユーザ登録画面</h3>
-    {% if error != null %}
-        <p style="color:red">{{error}}</p>
-    {% endif %}
-    <form action="{{url_for('register_exe')}}" method="post">
-        アカウント名：<input type="text" name="accountname"><br>
-        メールアドレス：<input type="mail" name="mail"><br>
-        パスワード：<input type="password" name="password"><br>
-    <button type="submit">登録</button>
-    </form>
+    <header>
+        <h1 class="title">Anunaki</h1>
+    </header>
+
+    <main id="register">
+        <div class="contener">
+            <h3 class="sub_title">新規登録</h3>
+            {% if error != null %}
+                <p style="color:red">{{error}}</p>
+            {% endif %}
+            <form action="{{url_for('register_exe')}}" method="post">
+                <div id="form_area">
+                    <label class="name">アカウント名</label>
+                    <input type="text" name="accountname">
+                    <label class="mail">メールアドレス</label>
+                    <input type="mail" name="mail" class="mail">
+                    <label class="pw">パスワード</label>
+                    <input type="password" name="password" class="pw">
+                    <input type="submit" value="登録" class="button">
+                </div>
+            
+            </form>
+        </div>
+    </main>
+    <footer class="footer">
+        <p></p>
+    </footer>
 </body>
 </html>
