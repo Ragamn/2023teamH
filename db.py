@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-import os,mysql.connector,string,random,hashlib
+import os,mysql.connector,hashlib,requests
 load_dotenv()
 config = {
     "user": os.getenv("USER"),
@@ -70,7 +70,7 @@ def user_post(user_id,post,prefecture_id):
         
         connection = mysql.connector.connect(**config)
 
-        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,'/img/test1.png',default)"
+        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,default,default)"
 
         # クエリの実行
         cursor = connection.cursor()
@@ -103,9 +103,11 @@ def user_post_img(user_id,post,prefecture_id,media_path):
         count = cursor.rowcount
         connection.commit()
 
-    except mysql.connector.Error:
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
         count = 0
-    except Exception:
+    except Exception as e:
+        print(f"エラー: {e}")
         count = 0
     finally:
         # カーソルを閉じる
@@ -114,24 +116,40 @@ def user_post_img(user_id,post,prefecture_id,media_path):
 
     return count
 
-
-#投稿削除機能
-def delete_user_posts(user_id):
+#ユーザID取得関数
+def get_user_id(user_mail):
     try:
         connection = mysql.connector.connect(**config)
+        query = 'SELECT user_id FROM user WHERE user_mail = %s'
+
+        # クエリの実行
         cursor = connection.cursor()
+        cursor.execute(query, (user_mail,))
+        result = cursor.fetchone()
 
-        # ログインしているユーザーに関連する投稿の論理削除フラグを設定
-        delete_query = "UPDATE post SET is_deleted = 1 WHERE user_id = %s"
-        cursor.execute(delete_query, (user_id,))
-
-        connection.commit()
-        return True
-
+        return result
     except mysql.connector.Error as err:
-        print(f"Error: {err}")
-        return False
-
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
     finally:
         cursor.close()
         connection.close()
+
+def get_location_from_latlng(latitude, longitude):
+    base_url = "https://nominatim.openstreetmap.org/reverse"
+    params = {
+        "format": "json",
+        "lat": latitude,
+        "lon": longitude,
+    }
+    
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()  # HTTPエラーレスポンスがあれば例外を発生させます。
+        data = response.json()
+        return data
+    except requests.exceptions.RequestException as e:
+        return f"エラーが発生しました: {str(e)}"

@@ -44,21 +44,47 @@ body{
     position: relative;
     min-height: 100vh;
 }
+main{
+    min-height: calc(100vh - 100px);
+}
+#register{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .contener{
     background-color: #FFFFFF;
-    margin: 8% 31% 5% 31% ;
-    padding:1% 5% 6% 5%;
+    margin: auto;
+    width: 30%;
+    padding:2% 5%;
     min-width: 50vh;
 }
 .sub_title{
     text-align: center;
-    margin-bottom: 4%;
 }
-.catchphrase{
-    text-align: center;
-    margin-bottom: 30px;
+.interval{
+    height: 24px;
 }
-.button-003 {
+#form_area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#form_area label{
+    width: 100%;
+    margin-bottom: 5px;
+}
+#form_area input{
+    margin-bottom: 15px;
+    width: 100%;
+}
+#form_area input[type="submit"]{
+    width: 30%;
+}
+#form_area input:nth-last-child(2){
+    margin-bottom: 40px;
+}
+.button{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,20 +99,6 @@ body{
     font-weight: 600;
     font-size: 1em;
 }
-
-.button-003::after {
-    transform: rotate(45deg);
-    width: 5px;
-    height: 5px;
-    margin-left: 10px;
-    border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
-    content: '';
-}
-
-.button-003:hover {
+.button:hover{
     background-color: #efd287;
-}
-.interval{
-    height: 24px;
 }
