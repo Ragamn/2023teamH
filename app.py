@@ -5,7 +5,6 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import or_
 from flask import flash
 from flask import request, jsonify
-from models import db, Post 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 
