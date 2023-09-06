@@ -73,8 +73,17 @@ def home():
           'password':password
         }
         return render_template('index.html',error=error,data=input_data)
+      
+@app.route('/admin')
+def admin():
+  return render_template('admin_login.html')
 
- 
+#管理者ログイン
+@app.route('/management',methods=['POST'])
+def management():
+    mail = request.form.get('mail')
+    password = request.form.get('password')
+  
   
 # ホームページ - 投稿一覧を表示
 @app.route('/homepage')
@@ -99,6 +108,5 @@ def delete_post(post_id):
 
     return redirect(url_for('home'))
 
-  
 if __name__ == '__main__':
   app.run(debug=True)
