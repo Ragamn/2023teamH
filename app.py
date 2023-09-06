@@ -2,9 +2,6 @@ from flask import Flask, render_template,request,redirect,url_for,session
 import db,string,random,os,admin_db
 from datetime import timedelta
 from werkzeug.utils import secure_filename
-from sqlalchemy import or_
-from flask import flash
-
 
 app = Flask(__name__)
 app.secret_key = ''.join(random.choices(string.ascii_letters,k=256))
@@ -70,29 +67,35 @@ def home():
           'password':password
         }
         return render_template('index.html',error=error,data=input_data)
+      
+@app.route('/admin')
+def admin():
+  return render_template('admin_login.html')
 
- 
+#管理者ログイン
+@app.route('/management',methods=['POST'])
+def management():
+    mail = request.form.get('mail')
+    password = request.form.get('password')
   
-#登録管理＿削除機能
-# ホームページ - 投稿一覧を表示
-@app.route('/')
-def home():
-    # 削除されていない投稿を取得
-    posts = Post.query.filter_by(is_deleted=False).order_by(Post.timestamp.desc()).all()
-    return render_template('home.html', posts=posts)
+  # ログイン判定
+    if admin_db.user_login(mail, password):
+      session['admin'] = True # session にキー：'user', バリュー:True を追加
+      session.permanent = True # session の有効期限を有効化
+      app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+      return render_template('account_management.html')
+    else :
+        error = 'ログインに失敗しました。'
+        # dictで返すことでフォームの入力量が増えても可読性が下がらない。
+        input_data = {
+          'mail':mail,
+          'password':password
+        }
+        return render_template('admin_login.html',error=error,data=input_data)
 
+app.route('/register_advice',methods=['GET'])
+def register_advice():
+  return render_template('register_advice.html')
 
-# 投稿を削除
-@app.route('/delete_post/<int:post_id>', methods=['POST'])
-def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    
-    # 削除フラグを立てる（論理削除）
-    post.is_deleted = True
-    db.session.commit()
-    
-    flash('投稿が削除されました', 'success')
-    return redirect(url_for('home'))
-  
 if __name__ == '__main__':
   app.run(debug=True)
