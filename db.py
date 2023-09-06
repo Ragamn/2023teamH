@@ -113,3 +113,25 @@ def user_post_img(user_id,post,prefecture_id,media_path):
         connection.close()
 
     return count
+
+
+#投稿削除機能
+def delete_user_posts(user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        # ログインしているユーザーに関連する投稿の論理削除フラグを設定
+        delete_query = "UPDATE post SET is_deleted = 1 WHERE user_id = %s"
+        cursor.execute(delete_query, (user_id,))
+
+        connection.commit()
+        return True
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+
+    finally:
+        cursor.close()
+        connection.close()

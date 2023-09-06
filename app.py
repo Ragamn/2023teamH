@@ -85,31 +85,6 @@ def management():
     password = request.form.get('password')
   
 
-#投稿モデルを定義
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # ユーザーIDとの関連付け
-    content = db.Column(db.String(255))
-    is_deleted = db.Column(db.Boolean, default=False)  # 論理削除フラグ
-    
-# 投稿を削除するためのエンドポイントを作成
-@app.route('/delete_post/<int:post_id>', methods=['POST'])
-@login_required  # ユーザーがログインしていることを確認
-def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
-
-    # ログインユーザーと投稿のユーザーが一致しているか確認
-    if post.user_id == current_user.id:
-        # 投稿を論理削除（削除フラグを設定）
-        post.is_deleted = True
-        db.session.commit()
-        flash('投稿が削除されました', 'success')
-    else:
-        flash('投稿の削除に失敗しました', 'error')
-
-    return redirect(url_for('home'))
-
-
 
 if __name__ == '__main__':
   app.run(debug=True)
