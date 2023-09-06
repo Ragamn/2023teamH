@@ -70,7 +70,7 @@ def user_post(user_id,post,prefecture_id):
         
         connection = mysql.connector.connect(**config)
 
-        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,'/img/test1.png',default)"
+        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,default,default)"
 
         # クエリの実行
         cursor = connection.cursor()
