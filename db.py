@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 import os,mysql.connector,hashlib,requests
+import mysql.connector
+
 load_dotenv()
 config = {
     "user": os.getenv("USER"),
@@ -153,3 +155,43 @@ def get_location_from_latlng(latitude, longitude):
         return data
     except requests.exceptions.RequestException as e:
         return f"エラーが発生しました: {str(e)}"
+    
+
+#アカウント一覧表示機能
+def get_user_list():
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+        query = "SELECT user_id, user_name FROM user"
+        cursor.execute(query)
+        user_list = cursor.fetchall()
+        return user_list
+    except mysql.connector.Error as err:
+        print(f"データベースエラー: {err}")
+        return []
+    finally:
+        cursor.close()
+        connection.close()
+        
+#アカウント削除機能
+def update_user_flag(user_id):
+    try:
+        # データベースに接続
+        connection = mysql.connector.connect(**config)
+        
+        # クエリの作成
+        query = "UPDATE users SET flag = 1 WHERE id = %s"
+        
+        # クエリを実行
+        cursor = connection.cursor()
+        cursor.execute(query, (user_id,))
+        
+        # 変更をコミット
+        connection.commit()
+        
+    except mysql.connector.Error as err:
+        print(f"エラー: {err}")
+    finally:
+        # カーソルと接続をクローズ
+        cursor.close()
+        connection.close()

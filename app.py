@@ -209,5 +209,21 @@ def user_delete():
     admin_db.user_delete(user_name)
     return redirect(url_for('user_list'))
 
+
+#アカウント管理
+## ユーザーデータベースからユーザー情報を取得
+@app.route('/account_manage')
+def user_list():
+    users = db.get_user_list()
+    return render_template('management.html', users=users)
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    # データベース内のユーザーのflagを1に設定するコードを実装する
+    db.update_user_flag(user_id)
+    # 論理削除が成功した場合はリダイレクトなどの適切な処理を行う
+    return redirect('/account_manage')
+
+
 if __name__ == '__main__':
   app.run(debug=True)
