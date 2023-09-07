@@ -8,6 +8,7 @@
 <body>
     <div>
         <h1>Anunaki</h1>
+        <a href="{{url_for('mypage')}}">マイページ</a>
         <a href="{{url_for('logout')}}">ログアウト</a>
     </div>
     <script>
@@ -43,6 +44,9 @@
     </script>
     <div>
         <h1>投稿</h1>
+        {% if msg != null %}
+            <p style="color:blue">{{msg}}</p>
+        {% endif %}
         <form action="{{url_for('register_post')}}" method="POST" enctype="multipart/form-data">
             <input type="text" name="post">
             <input class="file" type="file" name="file">
@@ -52,5 +56,22 @@
             <input type="submit"value='投稿'>
         </form>
     </div>
+    {% for post in post_list %}
+    <p>{{post[6]}}</p>
+    <p>{{post[2]}}</p>
+
+    {% if post[5] is defined and post[5] is not none%}
+        {% if post[7] == 1 %}
+        <img src="{{name+post[5]}}" alt="代替テキスト">
+        {% endif %}
+        {% if post[7] == 2 %}
+        <video src="{{name+post[5]}}" alt="代替テキスト"controls>
+        {% endif %}
+        {% if post[7] == 3 %}
+        <audio src="{{name+post[5]}}" alt="代替テキスト"controls>
+        {% endif %}
+    {% endif %}
+
+    {% endfor %}
 </body>
 </html>
