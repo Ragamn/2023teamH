@@ -188,9 +188,6 @@ def management():
         }
         return render_template('admin_login.html',error=error,data=input_data)
 
-@app.route('/account_management',methods=['GET'])
-def account_management():
-  return render_template('account_management.html')
 
 @app.route('/register_advice',methods=['GET'])
 def register_advice():
@@ -213,7 +210,7 @@ def user_delete():
 #アカウント管理
 ## ユーザーデータベースからユーザー情報を取得
 @app.route('/account_manage')
-def user_list():
+def account_management():
     users = db.get_user_list()
     return render_template('management.html', users=users)
 
