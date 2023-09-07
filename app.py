@@ -58,7 +58,8 @@ def home():
       session['user_id'] = user_id[0]
       session.permanent = True # session の有効期限を有効化
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-      return render_template('post.html')
+      post_list = db.get_all_post()
+      return render_template('post.html',post_list = post_list,name="/static/img/")
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -76,12 +77,18 @@ def logout():
       
 @app.route('/post')
 def post():
-   return render_template('post.html')
+   post_list = db.get_all_post()
+   return render_template('post.html',post_list = post_list,name="/static/img/")
 
 @app.route('/register_post',methods=['POST'])
 def register_post():
     if 'user' in session:
       post = request.form.get('post')
+      cleaned_post = post.replace(" ", "")
+      if cleaned_post == '':
+        msg = '投稿内容が空白でした'
+        post_list = db.get_all_post()
+        return render_template('post.html',msg=msg,post_list = post_list,name="/static/img/")
       # latitude = request.form['latitude']
       # longitude = request.form['longitude']
       latitude = request.form.get('latitude')
@@ -156,12 +163,28 @@ def register_post():
       prefecture_number = prefecture_mapping.get(province, 0)  # 0はデフォルト値（見つからない場合）
       if file.filename == '':
         db.user_post(user_id,post,prefecture_number)
+        return redirect('/post')
       else:
-        file.save('img/'+file.filename)
-        db.user_post_img(user_id,post,prefecture_number,file.filename)
-      return render_template('post.html')
+        if(db.get_extension(file.filename)):
+          file.save('static/img/'+file.filename)
+          extension = db.get_extension(file.filename)
+          db.user_post_img(user_id,post,prefecture_number,file.filename,extension)
+          return redirect('/post')
+        else:
+          msg = '対応していない拡張子のファイルがふくまれています'
+          post_list = db.get_all_post()
+          return render_template('post.html',msg=msg,post_list = post_list,name="/static/img/")
     else :
       return redirect(url_for('login'))
+
+@app.route('/mypage')
+def mypage():
+  if 'user' in session:
+    user_id = session['user_id']
+    post_list = db.get_my_post(user_id)
+    return render_template('mypage.html',post_list = post_list,name="/static/img/")
+  else:
+    return redirect(url_for('login'))
 
 #管理者routing
 @app.route('/admin')
