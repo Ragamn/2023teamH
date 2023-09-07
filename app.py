@@ -72,7 +72,7 @@ def home():
 def logout():
   session.pop('user', None) # session の破棄
   session.pop('user_id', None) # session の破棄
-  return redirect(url_for('login')) # ログイン画面にリダイレクト
+  return render_template('index.html')
       
 @app.route('/post')
 def post():
