@@ -56,22 +56,28 @@
             <input type="submit"value='投稿'>
         </form>
     </div>
+    <table>
     {% for post in post_list %}
-    <p>{{post[6]}}</p>
-    <p>{{post[2]}}</p>
-
-    {% if post[5] is defined and post[5] is not none%}
-        {% if post[7] == 1 %}
-        <img src="{{name+post[5]}}" alt="代替テキスト">
-        {% endif %}
-        {% if post[7] == 2 %}
-        <video src="{{name+post[5]}}" alt="代替テキスト"controls>
-        {% endif %}
-        {% if post[7] == 3 %}
-        <audio src="{{name+post[5]}}" alt="代替テキスト"controls>
-        {% endif %}
-    {% endif %}
-
-    {% endfor %}
+    <tr>
+        <div>
+            {{post[2]}}
+            {{post[6]}}
+        </div>
+        
+            {% if post[5] is defined and post[5] is not none%}
+                {% if post[7] == 1 %}
+                <div><img src="{{name+post[5]}}" alt="代替テキスト"></div>
+                {% endif %}
+                {% if post[7] == 2 %}
+                <div><video src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+                {% endif %}
+                {% if post[7] == 3 %}
+                <div><audio src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+                {% endif %}
+            {% endif %}
+        
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
