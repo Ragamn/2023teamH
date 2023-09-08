@@ -56,3 +56,28 @@ def user_delete(user_name):
     cursor.execute(query,(user_name,))
     cursor.close()
     connection.close()
+
+#アドバイス登録
+def register_advice(advice,emotional_x,emotional_y):
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO advice(id,advice,emotional_x,emotional_y) VALUES(default,%s,%s,%s)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(advice,emotional_x,emotional_y))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error:
+        count = 0
+    except Exception:
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count

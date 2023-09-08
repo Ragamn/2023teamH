@@ -54,11 +54,14 @@
     <form action="{{url_for('account_management')}}" method="GET">
         <input type="submit" value="アカウント管理">
     </form>
+    {% if msg != null %}
+    <p style="color:red">{{msg}}</p>
+    {% endif %}
       <form id="myForm" action="{{url_for('register_advice')}}" method="POST">
         <!-- x変数とy変数の値を送信するための非表示のinput要素 -->
         <input type="hidden" id="xValue" name="x">
         <input type="hidden" id="yValue" name="y">
-        <inupt type="text" name="advice">
+        <input type="text" name="advice">
         <input type="submit" value="Submit" id="submitButton">
       </form>
     
