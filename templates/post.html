@@ -1,123 +1,56 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-
 <body>
     <div>
         <h1>Anunaki</h1>
         <a href="{{url_for('logout')}}">ログアウト</a>
     </div>
+    <script>
+        // ユーザーの現在の位置情報を取得
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+        /***** ユーザーの現在の位置情報を取得 *****/
+        function successCallback(position) {
+            var gl_text = "緯度：" + position.coords.latitude + "<br>";
+            gl_text += "経度：" + position.coords.longitude + "<br>";
+
+            // フォームの隠しフィールドに位置情報を設定
+            document.getElementById("latitude").value = position.coords.latitude;
+            document.getElementById("longitude").value = position.coords.longitude;
+        }
+
+        /***** 位置情報が取得できない場合 *****/
+        function errorCallback(error) {
+            var err_msg = "";
+            switch (error.code) {
+                case 1:
+                    err_msg = "位置情報の利用が許可されていません";
+                    break;
+                case 2:
+                    err_msg = "デバイスの位置が判定できません";
+                    break;
+                case 3:
+                    err_msg = "タイムアウトしました";
+                    break;
+            }
+            document.getElementById("show_result").innerHTML = err_msg;
+        }
+    </script>
     <div>
         <h1>投稿</h1>
-        {% if msg != null %}
-        <p style="color:blue">{{msg}}</p>
-        {% endif %}
         <form action="{{url_for('register_post')}}" method="POST" enctype="multipart/form-data">
             <input type="text" name="post">
             <input class="file" type="file" name="file">
-            <!-- 位置情報を送信するための隠しフィールド -->
+             <!-- 位置情報を送信するための隠しフィールド -->
             <input type="hidden" id="latitude" name="latitude" value="">
             <input type="hidden" id="longitude" name="longitude" value="">
-            <input type="submit" value='投稿'>
+            <input type="submit"value='投稿'>
         </form>
     </div>
-    <table>
-        {% for post in post_list %}
-        <tr>
-            <td>{{post[2]}}</td>
-            <td>{{post[6]}}</td>
-            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="1">喜</button></td>
-            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="2">怒</button></td>
-            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="3">哀</button></td>
-            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="4">楽</button></td>
-        </tr>
-    </table>
-    {% if post[5] is defined and post[5] is not none%}
-    {% if post[7] == 1 %}
-    <div><img src="{{name+post[5]}}" alt="代替テキスト"></div>
-    {% endif %}
-    {% if post[7] == 2 %}
-    <div><video src="{{name+post[5]}}" alt="代替テキスト" controls></div>
-    {% endif %}
-    {% if post[7] == 3 %}
-    <div><audio src="{{name+post[5]}}" alt="代替テキスト" controls></div>
-    {% endif %}
-    {% endif %}
-    {% endfor %}
 </body>
-
-<script>
-    // ユーザーの現在の位置情報を取得
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-
-    /***** ユーザーの現在の位置情報を取得 *****/
-    function successCallback(position) {
-        var gl_text = "緯度：" + position.coords.latitude + "<br>";
-        gl_text += "経度：" + position.coords.longitude + "<br>";
-
-        // フォームの隠しフィールドに位置情報を設定
-        document.getElementById("latitude").value = position.coords.latitude;
-        document.getElementById("longitude").value = position.coords.longitude;
-    }
-
-    /***** 位置情報が取得できない場合 *****/
-    function errorCallback(error) {
-        var err_msg = "";
-        switch (error.code) {
-            case 1:
-                err_msg = "位置情報の利用が許可されていません";
-                break;
-            case 2:
-                err_msg = "デバイスの位置が判定できません";
-                break;
-            case 3:
-                err_msg = "タイムアウトしました";
-                break;
-        }
-        document.getElementById("show_result").innerHTML = err_msg;
-    }
-
-
-    let buttons = document.querySelectorAll('.emotion_buttons');
-    // リクエストの送信
-    for (button of buttons) {
-        button.addEventListener('click', function () {
-            // 送信するデータ（IDとテキスト、aとbの値を追加）
-            let Post_id = this.dataset.post_id;
-            let Emotion = this.dataset.emotion;
-            const data = {
-                user_id: '{{user_id}}',
-                post_id: Post_id,
-                emotion: Emotion
-            };
-
-            // HTTPリクエストを送信
-            fetch("{{url_for('add_emotion')}}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('サーバーレスポンス:', data);
-                })
-                .catch(error => {
-                    console.error('エラー:', error);
-                });
-        });
-    }
-</script>
-
 </html>
