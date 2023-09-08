@@ -59,7 +59,7 @@ def home():
       session.permanent = True # session の有効期限を有効化
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
       post_list = db.get_all_post()
-      return render_template('post.html',post_list = post_list,name="/static/img/")
+      return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
