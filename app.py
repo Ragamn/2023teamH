@@ -191,9 +191,9 @@ def mypage():
 def mail():
     return render_template('mail.html')
 
-# 入力されたメールアドレスを確認し、パスワード再設定画面へ
-@app.route('/password_change', methods=['POST'])
-def password_change():
+# 入力されたメールアドレスを確認してメールを送る
+@app.route('/send_mail', methods=['POST'])
+def send_mail():
     email = request.form.get('email')
     if db.check_email_exists(email):
         
@@ -201,9 +201,17 @@ def password_change():
         session['email'] = email
         session.permanent = True # session の有効期限を有効化
         app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-        return render_template('password_change.html', email=email)
+        return render_template('send_mail.html', email=email)
     else:
         return render_template('mail.html', message='メールアドレスが存在しません。')
+      
+#　セッションを確認する
+@app.route('/password_change')
+def password_change():
+    if 'email' in session:
+      return render_template('password_change.html')
+    else:
+      return redirect(url_for('login'))
 
 # 入力された２つのパスワードを確認し、パスワードを変更
 @app.route('/password_reset', methods=['POST'])
@@ -222,6 +230,7 @@ def password_reset():
     # 入力内容が一致している場合
     elif password == password_check:
         # パスワードを変更
+        session.pop('email', None) # session の破棄
         db.reset_password(password,user_mail)
         return render_template('password_reset.html',password=password)
     # それ以外の場合

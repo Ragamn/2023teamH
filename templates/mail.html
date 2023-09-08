@@ -9,7 +9,7 @@
     <h3>パスワード再設定</h3>
     <p>メールアドレスを入力してください</p>
     <p style="color:red;">{{ message }}</p>
-    <form action="{{url_for('password_change')}}" method="post">
+    <form action="{{url_for('send_mail')}}" method="post">
         <input type="text" name="email">
         <input type="submit" value="送信">
 </body>
