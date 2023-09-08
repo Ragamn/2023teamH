@@ -185,6 +185,48 @@ def mypage():
     return render_template('mypage.html',post_list = post_list,name="/static/img/")
   else:
     return redirect(url_for('login'))
+  
+# パスワード再設定画面の表示
+@app.route('/mail')
+def mail():
+    return render_template('mail.html')
+
+# 入力されたメールアドレスを確認し、パスワード再設定画面へ
+@app.route('/password_change', methods=['POST'])
+def password_change():
+    email = request.form.get('email')
+    if db.check_email_exists(email):
+        
+        # メールアドレスをセッションに保存
+        session['email'] = email
+        session.permanent = True # session の有効期限を有効化
+        app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+        return render_template('password_change.html', email=email)
+    else:
+        return render_template('mail.html', message='メールアドレスが存在しません。')
+
+# 入力された２つのパスワードを確認し、パスワードを変更
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    user_mail = session.get('email')
+    password = request.form.get('password')
+    password_check = request.form.get('password_check')
+
+    # パスワードが一致しているか確認
+    # 入力されていない場合
+    if password == '' or password_check == '':
+        return render_template('password_change.html', message='パスワードが入力されていません。')
+    # 入力内容が一致していない場合
+    elif password != password_check:
+        return render_template('password_change.html', message='パスワードが一致しません。')
+    # 入力内容が一致している場合
+    elif password == password_check:
+        # パスワードを変更
+        db.reset_password(password,user_mail)
+        return render_template('password_reset.html',password=password)
+    # それ以外の場合
+    else:
+        return render_template('password_change.html', message='パスワードが一致しません。')
 
 #管理者routing
 @app.route('/admin')

@@ -216,3 +216,48 @@ def get_my_post(user_id):
     finally:
         cursor.close()
         connection.close()
+        
+# 登録してあるメールアドレスの検索
+def check_email_exists(email):
+    try:
+        # データベースに接続
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        # メールアドレスを検索
+        cursor.execute("SELECT * FROM user WHERE user_mail = %s", (email,))
+        user = cursor.fetchone()
+
+        if user is None:
+            return False
+        else:
+            return True
+
+    except mysql.connector.Error as error:
+        print(f"Error: {error}")
+    finally:
+        # 接続をクローズ
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            
+# パスワード再設定
+def reset_password(password,user_mail):
+    hashed_password = get_hash(password)
+    try:
+        # データベースに接続
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        # パスワードを更新
+        query = "UPDATE user SET user_pass = %s WHERE user_mail = %s"
+        cursor.execute(query,(hashed_password,user_mail,))
+        connection.commit()
+
+    except mysql.connector.Error as error:
+        print(f"Error: {error}")
+    finally:
+        # 接続をクローズ
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
