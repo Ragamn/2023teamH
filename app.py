@@ -60,6 +60,9 @@ def home():
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
       post_list = db.get_all_post()
       return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+
+      return render_template('post.html')
+
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -77,18 +80,12 @@ def logout():
       
 @app.route('/post')
 def post():
-   post_list = db.get_all_post()
-   return render_template('post.html',post_list = post_list,name="/static/img/")
+   return render_template('post.html')
 
 @app.route('/register_post',methods=['POST'])
 def register_post():
     if 'user' in session:
       post = request.form.get('post')
-      cleaned_post = post.replace(" ", "")
-      if cleaned_post == '':
-        msg = '投稿内容が空白でした'
-        post_list = db.get_all_post()
-        return render_template('post.html',msg=msg,post_list = post_list,name="/static/img/")
       # latitude = request.form['latitude']
       # longitude = request.form['longitude']
       latitude = request.form.get('latitude')
@@ -163,17 +160,10 @@ def register_post():
       prefecture_number = prefecture_mapping.get(province, 0)  # 0はデフォルト値（見つからない場合）
       if file.filename == '':
         db.user_post(user_id,post,prefecture_number)
-        return redirect('/post')
       else:
-        if(db.get_extension(file.filename)):
-          file.save('static/img/'+file.filename)
-          extension = db.get_extension(file.filename)
-          db.user_post_img(user_id,post,prefecture_number,file.filename,extension)
-          return redirect('/post')
-        else:
-          msg = '対応していない拡張子のファイルがふくまれています'
-          post_list = db.get_all_post()
-          return render_template('post.html',msg=msg,post_list = post_list,name="/static/img/")
+        file.save('img/'+file.filename)
+        db.user_post_img(user_id,post,prefecture_number,file.filename)
+      return render_template('post.html')
     else :
       return redirect(url_for('login'))
 
@@ -185,6 +175,57 @@ def mypage():
     return render_template('mypage.html',post_list = post_list,name="/static/img/")
   else:
     return redirect(url_for('login'))
+  
+# パスワード再設定画面の表示
+@app.route('/mail')
+def mail():
+    return render_template('mail.html')
+
+# 入力されたメールアドレスを確認してメールを送る
+@app.route('/send_mail', methods=['POST'])
+def send_mail():
+    email = request.form.get('email')
+    if db.check_email_exists(email):
+        
+        # メールアドレスをセッションに保存
+        session['email'] = email
+        session.permanent = True # session の有効期限を有効化
+        app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+        return render_template('send_mail.html', email=email)
+    else:
+        return render_template('mail.html', message='メールアドレスが存在しません。')
+      
+#　セッションを確認する
+@app.route('/password_change')
+def password_change():
+    if 'email' in session:
+      return render_template('password_change.html')
+    else:
+      return redirect(url_for('login'))
+
+# 入力された２つのパスワードを確認し、パスワードを変更
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    user_mail = session.get('email')
+    password = request.form.get('password')
+    password_check = request.form.get('password_check')
+
+    # パスワードが一致しているか確認
+    # 入力されていない場合
+    if password == '' or password_check == '':
+        return render_template('password_change.html', message='パスワードが入力されていません。')
+    # 入力内容が一致していない場合
+    elif password != password_check:
+        return render_template('password_change.html', message='パスワードが一致しません。')
+    # 入力内容が一致している場合
+    elif password == password_check:
+        # パスワードを変更
+        session.pop('email', None) # session の破棄
+        db.reset_password(password,user_mail)
+        return render_template('password_reset.html',password=password)
+    # それ以外の場合
+    else:
+        return render_template('password_change.html', message='パスワードが一致しません。')
 
 #感情の追加
 @app.route('/add_emotion',methods=['POST'])
@@ -241,9 +282,22 @@ def management():
 def account_management():
   return render_template('account_management.html')
 
-@app.route('/register_advice',methods=['GET'])
-def register_advice():
+@app.route('/advice',methods=['GET'])
+def advice():
   return render_template('register_advice.html')
+  
+@app.route('/register_advice',methods=['POST'])
+def register_advice():
+  advice = request.form.get('advice')
+  emotional_x = request.form.get('x')
+  emotional_y = request.form.get('y')
+  count = admin_db.register_advice(advice,emotional_x,emotional_y)
+  if count == 1:
+    return render_template('register_advice.html')
+  else:
+    msg = '登録できませんでした。'
+    return render_template('register_advice.html',msg=msg)
+    
 
 # ユーザ一覧
 @app.route('/user_list')

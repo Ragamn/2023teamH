@@ -70,7 +70,7 @@ def user_post(user_id,post,prefecture_id):
         
         connection = mysql.connector.connect(**config)
 
-        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag,extension) VALUES(default,%s,%s,default,%s,default,default,default)"
+        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,default,default)"
 
         # クエリの実行
         cursor = connection.cursor()
@@ -90,16 +90,16 @@ def user_post(user_id,post,prefecture_id):
     return count
 
 #利用者投稿関数(画像,動画がある場合)
-def user_post_img(user_id,post,prefecture_id,media_path,extension):
+def user_post_img(user_id,post,prefecture_id,media_path):
     try:
         
         connection = mysql.connector.connect(**config)
 
-        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag,extension) VALUES(default,%s,%s,default,%s,%s,default,%s)"
+        query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag) VALUES(default,%s,%s,default,%s,%s,default)"
 
         # クエリの実行
         cursor = connection.cursor()
-        cursor.execute(query,(user_id,post,prefecture_id,media_path,extension))
+        cursor.execute(query,(user_id,post,prefecture_id,media_path))
         count = cursor.rowcount
         connection.commit()
 
@@ -265,3 +265,4 @@ def get_emotionos(user_id,post_id):
     finally:
         cursor.close()
         connection.close()
+        return f"エラーが発生しました: {str(e)}"

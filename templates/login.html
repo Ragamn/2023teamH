@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/login.css">
 </head>
 <body>
-    <h2>ログイン</h2>
+  <header>
+    <h1 class="title">Anunaki</h1>
+  </header>
+  
+  <div class="contener">
   {% if error != null %}
     <p style="color:red">{{error}}</p>
   {% endif %}
@@ -14,15 +20,17 @@
     <p style="color:blue">{{msg}}</p>
   {% endif %}
   <form action="{{url_for('home')}}" method="post">
-
-    <label>
-      <span>ログイン</span>
-      メールアドレス:<input type="mail" name="mail" placeholder="メールアドレス記入" value="{{data.accountname if data is defined else ''}}"><br>
-      パスワード：<input type="password"  name="password" placeholder="パスワード記入" value="{{data.password if data is defined else ''}}"><br>
-    </label>
-    <div>
-      <button type="submit">ログイン</button>
+    <div id="form_area">
+      <label>メールアドレス</label>
+      <input type="mail" name="mail" placeholder="メールアドレス記入" value="{{data.accountname if data is defined else ''}}"><br>
+      <label>パスワード</label>
+      <input type="password"  name="password" placeholder="パスワード記入" value="{{data.password if data is defined else ''}}"><br>
     </div>
-  </form>
+      <input type="submit" value="ログイン" class="button">
+    </form>
+    </div>
+    <footer class="footer">
+      <p></p>
+    </footer>
 </body>
 </html>
