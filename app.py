@@ -192,9 +192,22 @@ def management():
 def account_management():
   return render_template('account_management.html')
 
-@app.route('/register_advice',methods=['GET'])
-def register_advice():
+@app.route('/advice',methods=['GET'])
+def advice():
   return render_template('register_advice.html')
+  
+@app.route('/register_advice',methods=['POST'])
+def register_advice():
+  advice = request.form.get('advice')
+  emotional_x = request.form.get('x')
+  emotional_y = request.form.get('y')
+  count = admin_db.register_advice(advice,emotional_x,emotional_y)
+  if count == 1:
+    return render_template('register_advice.html')
+  else:
+    msg = '登録できませんでした。'
+    return render_template('register_advice.html',msg=msg)
+    
 
 # ユーザ一覧
 @app.route('/user_list')
