@@ -32,10 +32,10 @@
         <tr>
             <td>{{post[2]}}</td>
             <td>{{post[6]}}</td>
-            <td><button id=post_button data_post_id="{{post[0]}}" data_emotion="1">喜</button></td>
-            <td><button id=post_button data_post_id="{{post[0]}}" data_emotion="2">怒</button></td>
-            <td><button id=post_button data_post_id="{{post[0]}}" data_emotion="3">哀</button></td>
-            <td><button id=post_button data_post_id="{{post[0]}}" data_emotion="4">楽</button></td>
+            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="1">喜</button></td>
+            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="2">怒</button></td>
+            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="3">哀</button></td>
+            <td><button class="emotion_buttons" data-post_id="{{post[0]}}" data-emotion="4">楽</button></td>
         </tr>
     </table>
     {% if post[5] is defined and post[5] is not none%}
@@ -83,43 +83,44 @@
         document.getElementById("show_result").innerHTML = err_msg;
     }
 
-    
-    var button = document.getElementById('post_button');
-    // リクエストの送信
-    button.addEventListener('click', function () {
-        // 送信するデータ（IDとテキスト、aとbの値を追加）
-        var Post_id = button.getAttribute('data_post_id');
-        var Emotion = button.getAttribute('data_emotion');
-        const data = {
-            user_id: '{{user_id}}',
-            post_id: Post_id,
-            emotion: Emotion
-        };
 
-        console.log(data);
-        console.log('実行');
-        // // HTTPリクエストを送信
-        // fetch('/your-server-endpoint', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        // })
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         console.log('サーバーレスポンス:', data);
-        //         // ここでサーバーからのレスポンスを処理できます
-        //     })
-        //     .catch(error => {
-        //         console.error('エラー:', error);
-        //     });
-    });
+    let buttons = document.querySelectorAll('.emotion_buttons');
+    // リクエストの送信
+    for (button of buttons) {
+        button.addEventListener('click', function () {
+            // 送信するデータ（IDとテキスト、aとbの値を追加）
+            let Post_id = this.dataset.post_id;
+            let Emotion = this.dataset.emotion;
+            const data = {
+                user_id: '{{user_id}}',
+                post_id: Post_id,
+                emotion: Emotion
+            };
+
+            console.log(data);
+            // HTTPリクエストを送信
+            fetch('/your-server-endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('サーバーレスポンス:', data);
+                    // ここでサーバーからのレスポンスを処理できます
+                })
+                .catch(error => {
+                    console.error('エラー:', error);
+                });
+        });
+    }
 </script>
 
 </html>
