@@ -162,9 +162,8 @@ def delete_user_posts(user_id):
         cursor = connection.cursor()
 
         # ログインしているユーザーに関連する投稿の論理削除フラグを設定
-        delete_query = "UPDATE post SET is_deleted = 1 WHERE user_id = %s"
+        delete_query = "UPDATE post SET flag = 1 WHERE user_id = %s"
         cursor.execute(delete_query, (user_id,))
-
         connection.commit()
         return True
 
