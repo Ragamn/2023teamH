@@ -194,12 +194,22 @@ def add_emotion():
     user_id = data.get('user_id')
     post_id = data.get('post_id')
     emotion = data.get('emotion')
-
+    result = db.get_emotionos(user_id,post_id)
     print(user_id)
     print(post_id)
     print(emotion)
-    return jsonify({'message':'Success'})
+    # print(result[1])
+    # print(result[2])
+    # print(result[3])
+    if(not result):
+      print('実行2')
+      db.add_emotions(user_id,post_id,emotion)
+      return jsonify({'message':'Success'})
+    elif(result[1] == user_id and result[2] == post_id and result[3] == emotion):
+      print('実行1')
+      return jsonify({'error': 'すでに追加されています'})
   except Exception as e:
+    print('実行3')
     return jsonify({'error':str(e)})
 
 #管理者routing

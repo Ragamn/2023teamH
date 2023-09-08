@@ -243,3 +243,25 @@ def add_emotions(user_id,post_id,emotion):
         connection.close()
 
     return count
+
+#感情重複しないための閲覧
+def get_emotionos(user_id,post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT id,user_id,post_id,emotion FROM emotions WHERE user_id = %s AND post_id = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
