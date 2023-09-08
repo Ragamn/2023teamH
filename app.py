@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,redirect,url_for,session
+from flask import Flask, render_template,request,redirect,url_for,session,jsonify
 import db,string,random,os,admin_db
 from datetime import timedelta
 from werkzeug.utils import secure_filename
@@ -187,15 +187,20 @@ def mypage():
     return redirect(url_for('login'))
 
 #感情の追加
-@app.route('/add_emotion')
+@app.route('/add_emotion',methods=['POST'])
 def add_emotion():
-  # user_id = request.form.get('user_id')
-  # post_id = request.form.get('post_id')
-  # emotion = request.form.get('emotion')
-  # print(user_id)
-  # count = db.add_emotions(user_id,post_id,emotion)
-  print('てすと')
-  return render_template('admin_login.html')
+  try:
+    data = request.get_json()
+    user_id = data.get('user_id')
+    post_id = data.get('post_id')
+    emotion = data.get('emotion')
+
+    print(user_id)
+    print(post_id)
+    print(emotion)
+    return jsonify({'message':'Success'})
+  except Exception as e:
+    return jsonify({'error':str(e)})
 
 #管理者routing
 @app.route('/admin')
