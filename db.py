@@ -153,3 +153,116 @@ def get_location_from_latlng(latitude, longitude):
         return data
     except requests.exceptions.RequestException as e:
         return f"エラーが発生しました: {str(e)}"
+    
+#投稿一覧関数
+def get_all_post():
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT post.post_id,user.user_name,post.post,post.good,post.prefecture_id,post.media_path,post.created_at,post.extension FROM post INNER JOIN user ON user.user_id = post.user_id WHERE post.flag = 0'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+#ファイル判断関数
+def get_extension(filename):
+    try:
+        if isinstance(filename,str):
+            # ファイル名を小文字に変換して、拡張子を取得します
+            file_extension = filename.lower().split('.')[-1]
+
+            if file_extension in ['png','jpg']:
+                return 1
+            elif file_extension == 'mp4':
+                return 2
+            elif file_extension in ['wav','mp3']:
+                return 3
+            else:
+                return False
+    except IndexError:
+        # '.'がファイル名に含まれていない場合など、IndexErrorが発生する可能性があります
+        return False
+    
+#自分の投稿閲覧関数
+def get_my_post(user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT post.post_id,user.user_name,post.post,post.good,post.prefecture_id,post.media_path,post.created_at,post.extension FROM post INNER JOIN user ON user.user_id = post.user_id WHERE post.flag = 0 AND post.user_id = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,))
+        result = cursor.fetchall()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+#感情追加
+def add_emotions(user_id,post_id,emotion):
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO emotions(id,user_id,post_id,emotion) VALUES(default,%s,%s,%s)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id,emotion))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        count = 0
+    except Exception as e:
+        print(f"エラー: {e}")
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count
+
+#感情重複しないための閲覧
+def get_emotionos(user_id,post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT id,user_id,post_id,emotion FROM emotions WHERE user_id = %s AND post_id = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+        return f"エラーが発生しました: {str(e)}"

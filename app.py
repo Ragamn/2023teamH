@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,redirect,url_for,session
+from flask import Flask, render_template,request,redirect,url_for,session,jsonify
 import db,string,random,os,admin_db
 from datetime import timedelta
 from werkzeug.utils import secure_filename
@@ -58,7 +58,11 @@ def home():
       session['user_id'] = user_id[0]
       session.permanent = True # session の有効期限を有効化
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+      post_list = db.get_all_post()
+      return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+
       return render_template('post.html')
+
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -222,6 +226,32 @@ def password_reset():
     # それ以外の場合
     else:
         return render_template('password_change.html', message='パスワードが一致しません。')
+
+#感情の追加
+@app.route('/add_emotion',methods=['POST'])
+def add_emotion():
+  try:
+    data = request.get_json()
+    user_id = data.get('user_id')
+    post_id = data.get('post_id')
+    emotion = data.get('emotion')
+    result = db.get_emotionos(user_id,post_id)
+    print(user_id)
+    print(post_id)
+    print(emotion)
+    # print(result[1])
+    # print(result[2])
+    # print(result[3])
+    if(not result):
+      print('実行2')
+      db.add_emotions(user_id,post_id,emotion)
+      return jsonify({'message':'Success'})
+    elif(result[1] == user_id and result[2] == post_id and result[3] == emotion):
+      print('実行1')
+      return jsonify({'error': 'すでに追加されています'})
+  except Exception as e:
+    print('実行3')
+    return jsonify({'error':str(e)})
 
 #管理者routing
 @app.route('/admin')
