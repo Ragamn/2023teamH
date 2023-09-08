@@ -186,6 +186,17 @@ def mypage():
   else:
     return redirect(url_for('login'))
 
+#感情の追加
+@app.route('/add_emotion')
+def add_emotion():
+  # user_id = request.form.get('user_id')
+  # post_id = request.form.get('post_id')
+  # emotion = request.form.get('emotion')
+  # print(user_id)
+  # count = db.add_emotions(user_id,post_id,emotion)
+  print('てすと')
+  return render_template('admin_login.html')
+
 #管理者routing
 @app.route('/admin')
 def admin():

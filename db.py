@@ -216,3 +216,30 @@ def get_my_post(user_id):
     finally:
         cursor.close()
         connection.close()
+
+#感情追加
+def add_emotions(user_id,post_id,emotion):
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO emotions(id,user_id,post_id,emotion) VALUES(default,%s,%s,%s)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id,emotion))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        count = 0
+    except Exception as e:
+        print(f"エラー: {e}")
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count

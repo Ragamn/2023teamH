@@ -97,9 +97,8 @@
                 emotion: Emotion
             };
 
-            console.log(data);
             // HTTPリクエストを送信
-            fetch('/your-server-endpoint', {
+            fetch("{{url_for('add_emotion')}}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
