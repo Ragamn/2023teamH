@@ -41,21 +41,42 @@ def user_login(admin_mail,password):
 
 # ユーザ一覧
 def get_users():
-    connection = mysql.connector.connect(**config)
-    query = 'SELECT user_name FROM user where flag = 0'
-    cursor = connection.cursor()
-    cursor.execute(query,())
-    cursor.close()
-    connection.close()
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT user_id,user_name FROM user where flag = 0'
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()  # クエリの結果を取得する
+
+        return result
+    except mysql.connector.Error as err:
+        # エラーが発生した場合の処理
+        print(f"エラーが発生しました: {err}")
+
+    finally:
+        # 必ず接続をクローズする
+            cursor.close()
+            connection.close()
     
 # ユーザ削除
-def user_delete(user_name):
-    connection = mysql.connector.connect(**config)
-    query = 'update user set flag = 1 where user_name = %s'
-    cursor = connection.cursor()
-    cursor.execute(query,(user_name,))
-    cursor.close()
-    connection.close()
+def user_delete(user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'UPDATE user SET flag = 1 WHERE user_id = %s'
+        cursor = connection.cursor()
+        cursor.execute(query, (user_id,))
+        connection.commit()  # 変更をコミット
+        return True
+    
+    except mysql.connector.Error as err:
+        # エラーが発生した場合の処理
+        print(f"エラーが発生しました: {err}")
+        return False
+
+    finally:
+        # 必ず接続をクローズする
+            cursor.close()
+            connection.close()
 
 #アドバイス登録
 def register_advice(advice,emotional_x,emotional_y):
