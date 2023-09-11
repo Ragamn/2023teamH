@@ -275,7 +275,8 @@ def management():
       session['admin'] = True # session にキー：'user', バリュー:True を追加
       session.permanent = True # session の有効期限を有効化
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-      return render_template('account_management.html')
+      user_list = admin_db.get_users()
+      return render_template('account_management.html',user_list=user_list)
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -284,10 +285,6 @@ def management():
           'password':password
         }
         return render_template('admin_login.html',error=error,data=input_data)
-
-@app.route('/account_management',methods=['GET'])
-def account_management():
-  return render_template('account_management.html')
 
 @app.route('/advice',methods=['GET'])
 def advice():
@@ -305,19 +302,18 @@ def register_advice():
     msg = '登録できませんでした。'
     return render_template('register_advice.html',msg=msg)
     
-
-# ユーザ一覧
-@app.route('/user_list')
-def user_list():
-    user_list = admin_db.get_users()
-    return render_template('user_list.html', users=user_list)
+#ユーザー一覧
+@app.route('/account_management',methods=['GET'])
+def account_management():
+  user_list = admin_db.get_users()
+  return render_template('account_management.html',user_list=user_list)
 
 # ユーザ削除
-@app.route('/user_delete')
+@app.route('/user_delete',methods=['POST'])
 def user_delete():
-    user_name = request.args.get('user_name')
-    admin_db.user_delete(user_name)
-    return redirect(url_for('user_list'))
+    user_id = request.form.get('user_id')
+    admin_db.user_delete(user_id)
+    return redirect(url_for('account_management'))
 
 if __name__ == '__main__':
   app.run(debug=True)
