@@ -53,13 +53,21 @@ def home():
   
   # ログイン判定
     if db.user_login(mail, password):
-      user_id = db.get_user_id(mail)
-      session['user'] = True # session にキー：'user', バリュー:True を追加
-      session['user_id'] = user_id[0]
-      session.permanent = True # session の有効期限を有効化
-      app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-      post_list = db.get_all_post()
-      return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+      if db.get_flg(mail):
+        user_id = db.get_user_id(mail)
+        session['user'] = True # session にキー：'user', バリュー:True を追加
+        session['user_id'] = user_id[0]
+        session.permanent = True # session の有効期限を有効化
+        app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+        post_list = db.get_all_post()
+        return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+      else:
+         error = 'アカウントが削除されています'
+         input_data = {
+          'mail':mail,
+          'password':password
+        }
+         return render_template('login.html',error=error,data=input_data)
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -67,7 +75,7 @@ def home():
           'mail':mail,
           'password':password
         }
-        return render_template('index.html',error=error,data=input_data)
+        return render_template('login.html',error=error,data=input_data)
     
 @app.route('/logout')
 def logout():

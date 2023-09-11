@@ -22,9 +22,9 @@
   <form action="{{url_for('home')}}" method="post">
     <div id="form_area">
       <label>メールアドレス</label>
-      <input type="mail" name="mail" placeholder="メールアドレス記入" value="{{data.accountname if data is defined else ''}}"><br>
+      <input type="mail" name="mail" placeholder="メールアドレス記入" value="{{data.mail if data is defined else ''}}">
       <label>パスワード</label>
-      <input type="password"  name="password" placeholder="パスワード記入" value="{{data.password if data is defined else ''}}"><br>
+      <input type="password"  name="password" placeholder="パスワード記入">
     </div>
       <input type="submit" value="ログイン" class="button">
     </form>
