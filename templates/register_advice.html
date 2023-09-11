@@ -6,9 +6,113 @@
     <title>Document</title>
 </head>
 <body>
+    <style>
+        /* 四角形のスタイル */
+        #rectangle {
+          width: 200px;
+          height: 200px;
+          position: relative;
+          border: 2px solid red;
+        }
+    
+        /* 線のスタイル */
+        .line {
+          position: absolute;
+          background-color: blue;
+        }
+    
+        /* x軸の線 */
+        #x-axis {
+          width: 100%;
+          height: 2px;
+          top: 50%;
+          left: 0;
+        }
+    
+        /* y軸の線 */
+        #y-axis {
+          width: 2px;
+          height: 100%;
+          top: 0;
+          left: 50%;
+        }
+    
+        /* クリック位置のマーカー */
+        .marker {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          background-color: green;
+          border-radius: 50%;
+        }
+      </style>
+    </head>
+    
+    <body>
+    
     <h2>アドバイス登録</h2>
     <form action="{{url_for('account_management')}}" method="GET">
         <input type="submit" value="アカウント管理">
     </form>
+    {% if msg != null %}
+    <p style="color:red">{{msg}}</p>
+    {% endif %}
+      <form id="myForm" action="{{url_for('register_advice')}}" method="POST">
+        <!-- x変数とy変数の値を送信するための非表示のinput要素 -->
+        <input type="hidden" id="xValue" name="x">
+        <input type="hidden" id="yValue" name="y">
+        <input type="text" name="advice">
+        <input type="submit" value="Submit" id="submitButton">
+      </form>
+    
+      <!-- 四角形を表示する要素 -->
+      <div id="rectangle">
+        <!-- 線を表示 -->
+        <div class="line" id="x-axis"></div>
+        <div class="line" id="y-axis"></div>
+      </div>
+    
+      <script>
+        // 四角形内でクリックされた場合の処理
+        let previousMarker = null; // 前回のマーカーを追跡する変数
+    
+        rectangle.addEventListener('click', function (event) {
+          // クリックした位置の座標を取得
+          const rect = rectangle.getBoundingClientRect(); // 四角形の位置とサイズを取得
+          const x = event.clientX - rect.left; // クリックした位置のX座標
+          const y = event.clientY - rect.top; // クリックした位置のY座標
+    
+          // 四角形内のクリック位置を指定された座標系に変換
+          const width = rect.width; // 四角形の幅
+          const height = rect.height; // 四角形の高さ
+    
+          const normalizedX = x / width; // X座標を0から1に正規化
+          const normalizedY = y / height; // Y座標を0から1に正規化
+    
+          // 座標を表示
+          console.log('クリックした座標 (X, Y):', x, y);
+          console.log('正規化座標 (X, Y):', normalizedX.toFixed(2), normalizedY.toFixed(2));
+    
+          // フォームのinput要素に値を設定
+          document.getElementById('xValue').value = normalizedX.toFixed(2);
+          document.getElementById('yValue').value = normalizedY.toFixed(2);
+    
+          // 前回のマーカーを削除
+          if (previousMarker) {
+            rectangle.removeChild(previousMarker);
+          }
+    
+          // クリック位置に新しいマーカーを表示
+          const marker = document.createElement('div');
+          marker.className = 'marker';
+          marker.style.left = x - 5 + 'px'; // マーカーの中心を合わせるために調整
+          marker.style.top = y - 5 + 'px'; // マーカーの中心を合わせるために調整
+          rectangle.appendChild(marker);
+    
+          // 現在のマーカーを前回のマーカーに設定
+          previousMarker = marker;
+        });
+    
+      </script>
 </body>
 </html>
