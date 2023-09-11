@@ -34,3 +34,7 @@ button{
 button:hover {
     background-color: #efd287;
 }
+header{
+    display: flex;
+    justify-content: space-between;
+}
