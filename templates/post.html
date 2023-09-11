@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/post.css">
 </head>
 		
 <body>
@@ -13,8 +15,8 @@
         <a href="{{url_for('mypage')}}">マイページ</a>
         <a href="{{url_for('logout')}}">ログアウト</a>
     </div>
-    <div>
-        <h1>投稿</h1>
+    <div class="contener">
+        <h1 class="sub_title">投稿</h1>
         {% if msg != null %}
         <p style="color:blue">{{msg}}</p>
 					   
@@ -51,8 +53,11 @@
     {% endif %}
     {% endif %}
     {% endfor %}
-		
 </body>
+
+<footer class="footer">
+    <p></p>
+</footer>
 
 <script>
     // ユーザーの現在の位置情報を取得
