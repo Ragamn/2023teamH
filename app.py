@@ -186,6 +186,14 @@ def mypage():
   else:
     return redirect(url_for('login'))
 
+@app.route('/delete_post',methods=['POST'])
+def delete_post():
+   post_id = request.form.get('post_id')
+   user_id = session['user_id']
+   db.delete_post(post_id,user_id)
+   post_list = db.get_my_post(user_id)
+   return render_template('mypage.html',post_list = post_list,name="/static/img/")
+
 # パスワード再設定画面の表示
 @app.route('/mail')
 def mail():

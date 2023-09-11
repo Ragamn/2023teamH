@@ -308,3 +308,22 @@ def reset_password(password,user_mail):
         if connection.is_connected():
             cursor.close()
             connection.close()
+
+#投稿削除機能
+def delete_post(post_id,user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        delete_query = "UPDATE post SET flag = 1 WHERE post_id = %s AND user_id = %s"
+        cursor.execute(delete_query, (post_id,user_id))
+
+        connection.commit()
+        return True
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
