@@ -64,6 +64,30 @@ def user_login(user_mail,password):
 
     return flg
 
+def get_flg(user_mail):
+    flg = False
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = 'SELECT flag FROM user WHERE user_mail = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_mail,))
+        get_pass = cursor.fetchone()
+        if 0 == get_pass[0]:
+            flg = True
+    except mysql.connector.Error:
+        flg = False
+    except Exception:
+        flg = False
+    finally:
+        cursor.close()
+        connection.close()
+
+    return flg
+
 #利用者投稿関数(画像,動画がない場合)
 def user_post(user_id,post,prefecture_id):
     try:
