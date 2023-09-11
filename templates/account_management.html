@@ -11,7 +11,7 @@
 <body>
     <header>
         <h1 class="title">Anunaki</h1>
-        <form action="{{url_for('register_advice')}}" method="GET">
+        <form action="{{url_for('advice')}}" method="GET">
             <input type="submit" value="アドバイス登録">
         </form>
     
@@ -20,12 +20,15 @@
     <div class="contener">
         <h2 class="sub_title">アカウント管理</h2>
         <ul class="a">
-            <li><span>名前</span><button>削除</button></li>
-            <li><span>名前</span><button>削除</button></li>
-            <li><span>名前</span><button>削除</button></li>
-            <li><span>名前</span><button>削除</button></li>
-            <li><span>名前</span><button>削除</button></li>
-            <li><span>名前</span><button>削除</button></li>
+            {% for user in user_list %}
+            <li>
+                {{user[1]}}
+                <form action="{{url_for('user_delete')}}"method='POST'>
+                    <input type="hidden" value="{{user[0]}}" name="user_id">
+                    <button type="submit">削除</button>
+                </form>
+            </li>
+                {% endfor %}
         </ul>
     </div>    
 
@@ -33,9 +36,5 @@
     <footer class="footer">
         <p></p>
       </footer>
-    <h2>アカウント管理</h2>
-    <form action="{{url_for('advice')}}" method="GET">
-        <input type="submit" value="アドバイス登録">
-    </form>
 </body>
 </html>
