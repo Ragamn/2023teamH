@@ -4,8 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/defultstyle.css">
+    <link rel="stylesheet" href="/static/css/account_manadement.css">
 </head>
 <body>
+    <header>
+        <h1 class="title">Anunaki</h1>
+        <form action="{{url_for('register_advice')}}" method="GET">
+            <input type="submit" value="アドバイス登録">
+        </form>
+    
+    </header>
+
+    <div class="contener">
+        <h2 class="sub_title">アカウント管理</h2>
+        <ul class="a">
+            <li><span>名前</span><button>削除</button></li>
+            <li><span>名前</span><button>削除</button></li>
+            <li><span>名前</span><button>削除</button></li>
+            <li><span>名前</span><button>削除</button></li>
+            <li><span>名前</span><button>削除</button></li>
+            <li><span>名前</span><button>削除</button></li>
+        </ul>
+    </div>    
+
+    
+    <footer class="footer">
+        <p></p>
+      </footer>
     <h2>アカウント管理</h2>
     <form action="{{url_for('advice')}}" method="GET">
         <input type="submit" value="アドバイス登録">

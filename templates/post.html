@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/post.css">
 </head>
 <body>
-    <div>
-        <h1>Anunaki</h1>
-        <a href="{{url_for('logout')}}">ログアウト</a>
-    </div>
+    <header>
+        <a href="{{url_for('logout')}}" class="logout">ログアウト</a>
+        <h1 class="title">Anunaki</h1>
+    </header>
+       
     <script>
         // ユーザーの現在の位置情報を取得
         navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
@@ -41,8 +44,8 @@
             document.getElementById("show_result").innerHTML = err_msg;
         }
     </script>
-    <div>
-        <h1>投稿</h1>
+    <div class="contener">
+        <h1 class="sub_title">投稿</h1>
         <form action="{{url_for('register_post')}}" method="POST" enctype="multipart/form-data">
             <input type="text" name="post">
             <input class="file" type="file" name="file">
@@ -52,5 +55,8 @@
             <input type="submit"value='投稿'>
         </form>
     </div>
+    <footer class="footer">
+        <p></p>
+    </footer>
 </body>
 </html>
