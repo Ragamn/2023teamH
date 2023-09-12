@@ -4,6 +4,7 @@ from datetime import timedelta
 from werkzeug.utils import secure_filename
 import matplotlib.pyplot as plt
 import matplotlib.font_manager
+matplotlib.use('Agg')
 
 # 使用するフォントを設定
 font_path = "C:\\Windows\\Fonts\\meiryo.ttc"  # フォントファイルのパス
@@ -91,7 +92,7 @@ def logout():
 @app.route('/post')
 def post():
   post_list = db.get_all_post()
-  return render_template('post.html',post_list = post_list,name="/static/img/")
+  return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
 
 @app.route('/register_post',methods=['POST'])
 def register_post():
