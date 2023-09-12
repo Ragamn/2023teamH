@@ -1,42 +1,10 @@
-html{
-    font-size: 16px;
-}
-html,body{
-    margin:0;
-    padding:0
-}
-header{
-background-color: #FDCD87;  
-height: 50px;
-}
-.footer{
+.header{
+    display: flex;
+    flex-direction: initial;
+    justify-content: space-between;
+    align-items: center;
     background-color: #FDCD87;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     height: 50px;
-}
-h1,h2,h3,h4,h5,h6{
-    margin:0;
-    padding: 0;
-}
-h1{
-    font-size: 3.052rem;
-}
-h2{
-    font-size: 2.441rem;
-}
-h3{
-    font-size: 1.953rem;
-}
-h4{
-    font-size: 1.563em;
-}
-h5{
-    font-size: 1.25rem;
-}
-h6{
-    font-size: 1rem;
 }
 body{
     background-color: #FFF1DB;
@@ -44,17 +12,146 @@ body{
     position: relative;
     min-height: 100vh;
 }
-.contener{
-    background-color: #FFFFFF;
-    margin: auto;
-    width: 30%;
-    padding:2% 5%;
+.contener {
+    margin: 30px 0;
+    padding: 20px 0;
     min-width: 50vh;
-}
-.sub_title{
-    text-align: center;
-}
-.logout{
+    background-color: #fff;
+    width: 40%;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 70px;
+}
+.footer {
+    background-color: #FDCD87;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+}
+.rogo{
+    font-size: 3.052rem;
+}
+
+
+
+#postbody h1{
+    margin: 10px 0;
+}
+
+#myForm{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#myForm textarea{
+    width: 80%;
+}
+
+#tweet{
+    background-color: #fff;
+    align-items: center;
+}
+#tweet :hover{
+    opacity: 1;
+}
+#emotion_buttons1{
+    color: red;
+}
+#myPage{
+    position: absolute;
+    right: 2%;
+    top: 1%;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background-color: #fff;
+    color: black;
+    text-decoration: none;
+}
+header a:hover{
+    opacity: 0.8;
+}
+#logout{
+    position: absolute;
+    flex-direction: column;
+    right: 10%;
+    top: 1%;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background-color: #fff;
+    color: black;
+    text-decoration: none;
+}
+
+
+
+.notice{
+    font-size: 0.875rem;
+}
+
+#myForm input[type="submit"]{
+    background-color: #FFE297;
+    border: 1px solid #000;
+    width: 150px;
+    height: 45px;
+    font-size: 32px;
+    border-radius: 11px;
+} 
+
+.button{
+    display: flex;
+    justify-content: space-between  ;
+    padding-right: 30px;
+    width: 600px;
+}
+
+.postbody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.button button{
+    right: 20px;
+    border: 1px solid #000;
+    border-radius:100%;
+    right: 20px;
+}
+
+.button .emotion_buttons1{
+    margin: auto;
+    background-color: yellow;
+}
+.button .emotion_buttons2{
+    background-color: red;
+}
+.button .emotion_buttons3{
+    background-color: #05C0E9;
+}
+.button .emotion_buttons4{
+    background-color: #FE00B7;
+}
+
+.post{
+    width: 800px;
+    border: 1px solid #000;
+    border-radius: 77px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    justify-content: space-between;
+    flex: auto;
+    align-items: center;
+}
+
+.analysis{
+    background-color: white;
+    width: 300px;
+    height: 200px;
+    margin-left: auto;
+    margin-top: -850px;
 }
