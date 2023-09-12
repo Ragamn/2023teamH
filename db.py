@@ -19,7 +19,7 @@ def register_user(user_name,user_mail,password):
         
         connection = mysql.connector.connect(**config)
 
-        query = "INSERT INTO user(user_id,user_name,user_mail,user_pass,flag,graph_path,advice_kinds,emotional_x,emotional_y) VALUES(default,%s,%s,%s,default,'/img/test1.png',default,0.5,0.5)"
+        query = "INSERT INTO user(user_id,user_name,user_mail,user_pass,flag,graph_path,advice_kinds,emotional_x,emotional_y) VALUES(default,%s,%s,%s,default,'/img/test1.png',default,default,default)"
 
         # クエリの実行
         cursor = connection.cursor()
