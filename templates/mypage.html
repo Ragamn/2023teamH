@@ -11,7 +11,9 @@
 </header>
 <body>
     <h2>マイページ</h2>
+    {% if post_list[0] is defined and post_list[0] is not none%}
     名前{{post_list[0][1]}}
+    {% endif %}
     <table>
     {% for post in post_list %}
     <tr>
@@ -39,6 +41,7 @@
     </tr>
     {% endfor %}
     <img src="{{name}}" alt="グラフがありません">
+    {{advice}}
 </table>
 </body>
 </html>

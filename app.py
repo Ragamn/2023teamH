@@ -200,8 +200,10 @@ def mypage():
     anger = advice_emotion_db.get_emotion2(user_id)
     sadness = advice_emotion_db.get_emotion3(user_id)
     plesure = advice_emotion_db.get_emotion4(user_id)
+
+    print(joy)
     
-    if (joy != 0 or anger != 0 or sadness != 0 or plesure != 0):
+    if (joy[0] != 0 or anger[0] != 0 or sadness[0] != 0 or plesure[0] != 0):
       categories = ['喜', '怒', '哀', '楽']
       values = [joy[0],anger[0],sadness[0],plesure[0]]
       plt.bar(categories, values)
@@ -209,10 +211,16 @@ def mypage():
       graph_path = r'static/img/'+id+'.png'
       db.update_graph(graph_path,user_id)
       plt.savefig(graph_path)
-
-    post_list = db.get_my_post(user_id)
-    graph = db.get_graph_path(user_id)
-    return render_template('mypage.html',post_list = post_list,name=graph[0])
+      advice_emotion_db.register_coordinate(joy[0],anger[0],sadness[0],plesure[0],user_id)
+      
+      get_coordinate = advice_emotion_db.get_coordinate(user_id)
+      get_advice = advice_emotion_db.view_advice(get_coordinate[0],get_coordinate[1])
+      post_list = db.get_my_post(user_id)
+      graph = db.get_graph_path(user_id)
+      return render_template('mypage.html',post_list = post_list,name=graph[0],advice=get_advice)
+    else:
+      post_list = db.get_my_post(user_id)
+      return render_template('mypage.html',post_list = post_list)
   else:
     return redirect(url_for('login'))
 
