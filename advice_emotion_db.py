@@ -12,12 +12,12 @@ config = {
 def get_emotion1(user_id):
     try:
         connection = mysql.connector.connect(**config)
-        query = 'SELECT emotion FROM emotions WHERE user_id = %s AND emotion = 1'
+        query = 'SELECT COUNT(emotion) FROM emotions WHERE user_id = %s AND emotion = 1'
         
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query,(user_id,))
-        result = cursor.fetchall()
+        result = cursor.fetchone()
 
         return result
     except mysql.connector.Error as err:
@@ -34,12 +34,12 @@ def get_emotion1(user_id):
 def get_emotion2(user_id):
     try:
         connection = mysql.connector.connect(**config)
-        query = 'SELECT emotion FROM emotions WHERE user_id = %s AND emotion = 2'
+        query = 'SELECT COUNT(emotion) FROM emotions WHERE user_id = %s AND emotion = 2'
 
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query,(user_id,))
-        result = cursor.fetchall()
+        result = cursor.fetchone()
 
         return result
     except mysql.connector.Error as err:
@@ -56,12 +56,12 @@ def get_emotion2(user_id):
 def get_emotion3(user_id):
     try:
         connection = mysql.connector.connect(**config)
-        query = 'SELECT emotion FROM emotions WHERE user_id = %s AND emotion = 3'
+        query = 'SELECT COUNT(emotion) FROM emotions WHERE user_id = %s AND emotion = 3'
 
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query,(user_id,))
-        result = cursor.fetchall()
+        result = cursor.fetchone()
 
         return result
     except mysql.connector.Error as err:
@@ -78,12 +78,12 @@ def get_emotion3(user_id):
 def get_emotion4(user_id):
     try:
         connection = mysql.connector.connect(**config)
-        query = 'SELECT emotion FROM emotions WHERE user_id = %s AND emotion = 4'
+        query = 'SELECT COUNT(emotion) FROM emotions WHERE user_id = %s AND emotion = 4'
 
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query,(user_id,))
-        result = cursor.fetchall()
+        result = cursor.fetchone()
 
         return result
     except mysql.connector.Error as err:

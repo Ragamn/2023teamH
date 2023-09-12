@@ -351,3 +351,44 @@ def delete_post(post_id,user_id):
     finally:
         cursor.close()
         connection.close()
+
+#グラフ登録
+def update_graph(graph_path,user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        query = "UPDATE user SET graph_path = %s WHERE user_id = %s"
+        cursor.execute(query, (graph_path,user_id))
+
+        connection.commit()
+        return True
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
+#グラフパス取得
+def get_graph_path(user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT graph_path FROM user WHERE user_id = %s'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()

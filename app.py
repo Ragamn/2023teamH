@@ -1,8 +1,13 @@
 from flask import Flask, render_template,request,redirect,url_for,session,jsonify
-import db,string,random,os,admin_db
+import db,string,random,os,admin_db,advice_emotion_db
 from datetime import timedelta
 from werkzeug.utils import secure_filename
+import matplotlib.pyplot as plt
+import matplotlib.font_manager
 
+# 使用するフォントを設定
+font_path = "C:\\Windows\\Fonts\\meiryo.ttc"  # フォントファイルのパス
+plt.rcParams['font.family'] = matplotlib.font_manager.FontProperties(fname=font_path).get_name()
 app = Flask(__name__)
 app.secret_key = ''.join(random.choices(string.ascii_letters,k=256))
 
@@ -189,8 +194,24 @@ def register_post():
 def mypage():
   if 'user' in session:
     user_id = session['user_id']
+    id = user_id
+    joy = advice_emotion_db.get_emotion1(user_id)
+    anger = advice_emotion_db.get_emotion2(user_id)
+    sadness = advice_emotion_db.get_emotion3(user_id)
+    plesure = advice_emotion_db.get_emotion4(user_id)
+    
+    if (joy != 0 or anger != 0 or sadness != 0 or plesure != 0):
+      categories = ['喜', '怒', '哀', '楽']
+      values = [joy[0],anger[0],sadness[0],plesure[0]]
+      plt.bar(categories, values)
+      id = str(id)
+      graph_path = r'static/img/'+id+'.png'
+      db.update_graph(graph_path,user_id)
+      plt.savefig(graph_path)
+
     post_list = db.get_my_post(user_id)
-    return render_template('mypage.html',post_list = post_list,name="/static/img/")
+    graph = db.get_graph_path(user_id)
+    return render_template('mypage.html',post_list = post_list,name=graph[0])
   else:
     return redirect(url_for('login'))
 
@@ -275,6 +296,7 @@ def add_emotion():
   except Exception as e:
     print('実行3')
     return jsonify({'error':str(e)})
+
 
 #管理者routing
 @app.route('/admin')
