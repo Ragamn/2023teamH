@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<header>
+    <h1 class="title">Anunaki</h1>
+    <a href="{{url_for('post')}}">home</a>
+</header>
+<body>
+    <h2>マイページ</h2>
+    {% if post_list[0] is defined and post_list[0] is not none%}
+    名前{{post_list[0][1]}}
+    {% endif %}
+    <table>
+    {% for post in post_list %}
+    <tr>
+        <div>
+            {{post[2]}}
+            {{post[6]}}
+            <form action="{{url_for('delete_post')}}"method='POST'>
+                <input type="hidden" value="{{post[0]}}" name="post_id">
+                <button type="submit">削除</button>
+            </form>
+        </div>
+
+        {% if post[5] is defined and post[5] is not none%}
+            {% if post[7] == 1 %}
+            <div><img src="{{name+post[5]}}" alt="代替テキスト"></div>
+            {% endif %}
+            {% if post[7] == 2 %}
+            <div><video src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+            {% endif %}
+            {% if post[7] == 3 %}
+            <div><audio src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+            {% endif %}
+        {% endif %}
+
+    </tr>
+    {% endfor %}
+    <img src="{{name}}" alt="グラフがありません">
+    {{advice}}
+</table>
+</body>
+</html>

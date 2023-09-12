@@ -4,18 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/index.css">
 </head>
 
 <body>
     <header>
-        <h1>Anunaki</h1>
+        <h1 class="title">Anunaki</h1>
     </header>
-    <div>
-        <h1>Anunakiとは</h1>
-        <p>文章を投稿すると、その内容からあなたの感情を分析くれるSNSです</p>
-        <a href="{{url_for('register')}}">新規登録</a>
-        <a href="{{url_for('login')}}">ログイン</a>
+    <div class="contener">
+        <h3 class="sub_title">Anunakiとは</h2>
+        <p class="catchphrase">文章を投稿すると、その内容<br>からあなたの感情を分析して<br>アドバイスをくれるSNSです</p>
+        <form action="{{url_for('register')}}" method="get">
+            <button type="submit" class="button-003">アカウント作成</button>
+        </form>
+            <div class="interval">
+            </div>
+        <form action="{{url_for('login')}}" method="get">
+            <button type="submit" class="button-003">ログイン</button>
+        </form>
     </div>
+    <footer class="footer">
+        <p></p>
+    </footer>
 </body>
 </html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/defultstyle.css">
+    <link rel="stylesheet" href="/static/css/account_manadement.css">
+</head>
+<body>
+    <header>
+        <h1 class="title">Anunaki</h1>
+        <form action="{{url_for('advice')}}" method="GET">
+            <input type="submit" value="アドバイス登録">
+        </form>
+    
+    </header>
+
+    <div class="contener">
+        <h2 class="sub_title">アカウント管理</h2>
+        <ul class="a">
+            {% for user in user_list %}
+            <li>
+                {{user[1]}}
+                <form action="{{url_for('user_delete')}}"method='POST'>
+                    <input type="hidden" value="{{user[0]}}" name="user_id">
+                    <button type="submit">削除</button>
+                </form>
+            </li>
+                {% endfor %}
+        </ul>
+    </div>    
+
+    
+    <footer class="footer">
+        <p></p>
+      </footer>
+</body>
+</html>

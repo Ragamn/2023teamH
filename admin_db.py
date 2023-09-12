@@ -5,7 +5,7 @@ config = {
     "user": os.getenv("USER"),
     "password": os.getenv("PASS"),
     "host": os.getenv("HOST"),
-    "database": os.getenv("DATABASSE")
+    "database": os.getenv("DATABASE")
     }
 
 #パスワードをハッシュ
@@ -20,7 +20,7 @@ def user_login(admin_mail,password):
         
         connection = mysql.connector.connect(**config)
 
-        query = 'SELECT admin_pass FROM user WHERE admin_mail = %s'
+        query = 'SELECT admin_pass FROM admin WHERE admin_mail = %s'
 
         # クエリの実行
         cursor = connection.cursor()
@@ -38,3 +38,67 @@ def user_login(admin_mail,password):
         connection.close()
 
     return flg
+
+# ユーザ一覧
+def get_users():
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT user_id,user_name FROM user where flag = 0'
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()  # クエリの結果を取得する
+
+        return result
+    except mysql.connector.Error as err:
+        # エラーが発生した場合の処理
+        print(f"エラーが発生しました: {err}")
+
+    finally:
+        # 必ず接続をクローズする
+            cursor.close()
+            connection.close()
+    
+# ユーザ削除
+def user_delete(user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'UPDATE user SET flag = 1 WHERE user_id = %s'
+        cursor = connection.cursor()
+        cursor.execute(query, (user_id,))
+        connection.commit()  # 変更をコミット
+        return True
+    
+    except mysql.connector.Error as err:
+        # エラーが発生した場合の処理
+        print(f"エラーが発生しました: {err}")
+        return False
+
+    finally:
+        # 必ず接続をクローズする
+            cursor.close()
+            connection.close()
+
+#アドバイス登録
+def register_advice(advice,emotional_x,emotional_y):
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO advice(id,advice,emotional_x,emotional_y) VALUES(default,%s,%s,%s)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(advice,emotional_x,emotional_y))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error:
+        count = 0
+    except Exception:
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count
