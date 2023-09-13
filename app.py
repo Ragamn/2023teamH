@@ -217,7 +217,7 @@ def mypage():
       get_advice = advice_emotion_db.view_advice(get_coordinate[0],get_coordinate[1])
       post_list = db.get_my_post(user_id)
       graph = db.get_graph_path(user_id)
-      return render_template('mypage.html',post_list = post_list,graph=graph[0],advice=get_advice,name="/static/img/")
+      return render_template('mypage.html',post_list = post_list,name=graph[0],advice=get_advice)
     else:
       post_list = db.get_my_post(user_id)
       return render_template('mypage.html',post_list = post_list)

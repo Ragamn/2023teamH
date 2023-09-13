@@ -31,7 +31,7 @@
             <div><img src="{{name+post[5]}}" alt="代替テキスト"></div>
             {% endif %}
             {% if post[7] == 2 %}
-            <div><video width="640" height="360" src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+            <div><video src="{{name+post[5]}}" alt="代替テキスト"controls></div>
             {% endif %}
             {% if post[7] == 3 %}
             <div><audio src="{{name+post[5]}}" alt="代替テキスト"controls></div>
@@ -40,7 +40,7 @@
 
     </tr>
     {% endfor %}
-    <img src="{{graph}}" alt="グラフがありません">
+    <img src="{{name}}" alt="グラフがありません">
     {{advice}}
 </table>
 </body>
