@@ -206,7 +206,7 @@ def get_extension(filename):
             # ファイル名を小文字に変換して、拡張子を取得します
             file_extension = filename.lower().split('.')[-1]
 
-            if file_extension in ['png','jpg']:
+            if file_extension in ['png','jpg','gif']:
                 return 1
             elif file_extension == 'mp4':
                 return 2
