@@ -243,7 +243,7 @@ def get_my_post(user_id):
 #感情追加
 def add_emotions(user_id,post_id,emotion):
     try:
-        
+
         connection = mysql.connector.connect(**config)
 
         query = "INSERT INTO emotions(id,user_id,post_id,emotion) VALUES(default,%s,%s,%s)"
@@ -276,9 +276,30 @@ def get_emotionos(user_id,post_id):
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query,(user_id,post_id))
-        result = cursor.fetchone()
-
+        result = cursor.fetchall()
+        print("get_emoのresult=",result)
         return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def delete_emotion(user_id,post_id,emotion):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'delete * FROM emotions WHERE user_id = %s AND post_id = %s AND emotion = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id,emotion))
+        result = cursor.fetchall()
+        print("del_emoのresult=",result)
+        return None
     except mysql.connector.Error as err:
         print(f"MySQLエラー: {err}")
         return None
