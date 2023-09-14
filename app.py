@@ -215,12 +215,13 @@ def mypage():
       
       get_coordinate = advice_emotion_db.get_coordinate(user_id)
       get_advice = advice_emotion_db.view_advice(get_coordinate[0],get_coordinate[1])
+      print(get_advice)
       post_list = db.get_my_post(user_id)
       graph = db.get_graph_path(user_id)
-      return render_template('mypage.html',post_list = post_list,name=graph[0],advice=get_advice)
+      return render_template('mypage.html',post_list = post_list,name="/static/img/",graph_name=graph[0],advice=get_advice)
     else:
       post_list = db.get_my_post(user_id)
-      return render_template('mypage.html',post_list = post_list)
+      return render_template('mypage.html',post_list = post_list,name="/static/img/")
   else:
     return redirect(url_for('login'))
 
@@ -229,8 +230,30 @@ def delete_post():
    post_id = request.form.get('post_id')
    user_id = session['user_id']
    db.delete_post(post_id,user_id)
-   post_list = db.get_my_post(user_id)
-   return render_template('mypage.html',post_list = post_list,name="/static/img/")
+   id = user_id
+   joy = advice_emotion_db.get_emotion1(user_id)
+   anger = advice_emotion_db.get_emotion2(user_id)
+   sadness = advice_emotion_db.get_emotion3(user_id)
+   plesure = advice_emotion_db.get_emotion4(user_id)
+   print(joy)
+   if (joy[0] != 0 or anger[0] != 0 or sadness[0] != 0 or plesure[0] != 0):
+    categories = ['喜', '怒', '哀', '楽']
+    values = [joy[0],anger[0],sadness[0],plesure[0]]
+    plt.bar(categories, values)
+    id = str(id)
+    graph_path = r'static/img/'+id+'.png'
+    db.update_graph(graph_path,user_id)
+    plt.savefig(graph_path)
+    advice_emotion_db.register_coordinate(joy[0],anger[0],sadness[0],plesure[0],user_id)
+      
+    get_coordinate = advice_emotion_db.get_coordinate(user_id)
+    get_advice = advice_emotion_db.view_advice(get_coordinate[0],get_coordinate[1])
+    post_list = db.get_my_post(user_id)
+    graph = db.get_graph_path(user_id)
+    return render_template('mypage.html',post_list = post_list,name="/static/img/",graph_name=graph[0],advice=get_advice)
+  #  post_list = db.get_my_post(user_id)
+  #  return render_template('mypage.html',post_list = post_list,name="/static/img/")
+  
 
 # パスワード再設定画面の表示
 @app.route('/mail')
@@ -295,16 +318,28 @@ def add_emotion():
     print(user_id)
     print(post_id)
     print(emotion)
-    if(not result):
-      print('実行2')
-      db.add_emotions(user_id,post_id,emotion)
-      return jsonify({'message':'Success'})
-    elif(result[1] == user_id and result[2] == post_id and result[3] == emotion):
-      print('実行1')
-      return jsonify({'error': 'すでに追加されています'})
+    # ユーザーが過去に押したボタンのリストを作成
+    exist_emotions = set()
+    if not result:
+       print("実行2")
+       db.add_emotions(user_id,post_id,emotion)
+       return jsonify({'message':'Success'})   
+    elif result:
+      for db_exist in result:   
+        print("存在する＝",db_exist)   
+        exist_emotions.add(db_exist[3])
+      print("exist=",exist_emotions)
+      # ユーザーが押したタグがリストの中になければタグ付けする
+      if int(emotion) not in exist_emotions:
+        db.add_emotions(user_id,post_id,emotion)
+        return jsonify({'message':'これまで押したことのないタグを登録するよ'})
+      elif result[1] == user_id and result[2] == post_id and result[3] == emotion:
+        # db.delete_emotion(user_id,post_id,emotion)
+        return jsonify({'message':'タグ付けを解除する予定'})
   except Exception as e:
     print('実行3')
     return jsonify({'error':str(e)})
+  return jsonify({'error':"未知のケースです"})
 
 
 #管理者routing
