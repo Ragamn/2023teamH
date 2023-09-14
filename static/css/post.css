@@ -1,0 +1,167 @@
+.header{
+    display: flex;
+    flex-direction: initial;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FDCD87;
+    height: 50px;
+}
+body{
+    background-color: #FFF1DB;
+    max-height: 100vh;
+    position: relative;
+    min-height: 100vh;
+}
+.contener {
+    margin: 30px 0;
+    padding: 20px 0;
+    min-width: 50vh;
+    background-color: #fff;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 70px;
+}
+.footer {
+    background-color: #FDCD87;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+}
+.rogo{
+    font-size: 3.052rem;
+}
+
+
+
+#postbody h1{
+    margin: 10px 0;
+}
+
+#myForm{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* #myForm textarea{
+    width: 80%;
+} */
+.myformtextarea{
+    width: 80%;   
+}
+#tweet{
+    background-color: #fff;
+    align-items: center;
+}
+#tweet :hover{
+    opacity: 1;
+}
+#myPage{
+    position: absolute;
+    right: 2%;
+    top: 1%;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background-color: #fff;
+    color: black;
+    text-decoration: none;
+}
+header a:hover{
+    opacity: 0.8;
+}
+#logout{
+    position: absolute;
+    flex-direction: column;
+    right: 10%;
+    top: 1%;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background-color: #fff;
+    color: black;
+    text-decoration: none;
+}
+
+
+
+.notice{
+    font-size: 0.875rem;
+}
+
+#myForm input[type="submit"]{
+    background-color: #FFE297;
+    border: 1px solid #000;
+    width: 150px;
+    height: 45px;
+    font-size: 32px;
+    border-radius: 11px;
+} 
+
+.button{
+    display: flex;
+    justify-content: space-between  ;
+    padding-right: 30px;
+    width: 600px;
+}
+
+.postbody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.button button{
+    right: 20px;
+    border: 1px solid #000;
+    border-radius:100%;
+    right: 20px;
+}
+
+.button #emotion_buttons1{
+    margin: auto;
+    background-color: yellow;
+}
+.button #emotion_buttons2{
+    background-color: red;
+}
+.button #emotion_buttons3{
+    background-color: #05C0E9;
+}
+.button #emotion_buttons4{
+    background-color: #FE00B7;
+}
+
+.post{
+    width: 800px;
+    margin-bottom: 2%;
+    border: 1px solid #000;
+    border-radius: 77px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    justify-content: space-between;
+    flex: auto;
+    align-items: center;
+}
+
+.analysis{
+    background-color: white;
+    width: 300px;
+    height: 200px;
+    margin-left: auto;
+    margin-top: -950px;
+}
+.nameandsub{
+    width: 80%;
+    display: flex;
+}
+.whosepost{
+    font-size: 20px;
+}
+.media{
+    
+}

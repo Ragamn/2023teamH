@@ -1,8 +1,14 @@
-from flask import Flask, render_template,request,redirect,url_for,session
-import db,string,random,os,admin_db
+from flask import Flask, render_template,request,redirect,url_for,session,jsonify
+import db,string,random,os,admin_db,advice_emotion_db
 from datetime import timedelta
 from werkzeug.utils import secure_filename
+import matplotlib.pyplot as plt
+import matplotlib.font_manager
+matplotlib.use('Agg')
 
+# 使用するフォントを設定
+font_path = "C:\\Windows\\Fonts\\meiryo.ttc"  # フォントファイルのパス
+plt.rcParams['font.family'] = matplotlib.font_manager.FontProperties(fname=font_path).get_name()
 app = Flask(__name__)
 app.secret_key = ''.join(random.choices(string.ascii_letters,k=256))
 
@@ -53,13 +59,21 @@ def home():
   
   # ログイン判定
     if db.user_login(mail, password):
-      user_id = db.get_user_id(mail)
-      session['user'] = True # session にキー：'user', バリュー:True を追加
-      session['user_id'] = user_id[0]
-      session.permanent = True # session の有効期限を有効化
-      app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-      post_list = db.get_all_post()
-      return render_template('post.html',post_list = post_list,name="/static/img/")
+      if db.get_flg(mail):
+        user_id = db.get_user_id(mail)
+        session['user'] = True # session にキー：'user', バリュー:True を追加
+        session['user_id'] = user_id[0]
+        session.permanent = True # session の有効期限を有効化
+        app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+        post_list = db.get_all_post()
+        return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+      else:
+         error = 'アカウントが削除されています'
+         input_data = {
+          'mail':mail,
+          'password':password
+        }
+         return render_template('login.html',error=error,data=input_data)
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -67,7 +81,7 @@ def home():
           'mail':mail,
           'password':password
         }
-        return render_template('index.html',error=error,data=input_data)
+        return render_template('login.html',error=error,data=input_data)
     
 @app.route('/logout')
 def logout():
@@ -77,8 +91,8 @@ def logout():
       
 @app.route('/post')
 def post():
-   post_list = db.get_all_post()
-   return render_template('post.html',post_list = post_list,name="/static/img/")
+  post_list = db.get_all_post()
+  return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
 
 @app.route('/register_post',methods=['POST'])
 def register_post():
@@ -181,10 +195,152 @@ def register_post():
 def mypage():
   if 'user' in session:
     user_id = session['user_id']
-    post_list = db.get_my_post(user_id)
-    return render_template('mypage.html',post_list = post_list,name="/static/img/")
+    id = user_id
+    joy = advice_emotion_db.get_emotion1(user_id)
+    anger = advice_emotion_db.get_emotion2(user_id)
+    sadness = advice_emotion_db.get_emotion3(user_id)
+    plesure = advice_emotion_db.get_emotion4(user_id)
+
+    print(joy)
+    
+    if (joy[0] != 0 or anger[0] != 0 or sadness[0] != 0 or plesure[0] != 0):
+      categories = ['喜', '怒', '哀', '楽']
+      values = [joy[0],anger[0],sadness[0],plesure[0]]
+      plt.bar(categories, values)
+      id = str(id)
+      graph_path = r'static/img/'+id+'.png'
+      db.update_graph(graph_path,user_id)
+      plt.savefig(graph_path)
+      advice_emotion_db.register_coordinate(joy[0],anger[0],sadness[0],plesure[0],user_id)
+      
+      get_coordinate = advice_emotion_db.get_coordinate(user_id)
+      get_advice = advice_emotion_db.view_advice(get_coordinate[0],get_coordinate[1])
+      print(get_advice)
+      post_list = db.get_my_post(user_id)
+      graph = db.get_graph_path(user_id)
+      return render_template('mypage.html',post_list = post_list,name="/static/img/",graph_name=graph[0],advice=get_advice)
+    else:
+      post_list = db.get_my_post(user_id)
+      return render_template('mypage.html',post_list = post_list,name="/static/img/")
   else:
     return redirect(url_for('login'))
+
+@app.route('/delete_post',methods=['POST'])
+def delete_post():
+   post_id = request.form.get('post_id')
+   user_id = session['user_id']
+   db.delete_post(post_id,user_id)
+   id = user_id
+   joy = advice_emotion_db.get_emotion1(user_id)
+   anger = advice_emotion_db.get_emotion2(user_id)
+   sadness = advice_emotion_db.get_emotion3(user_id)
+   plesure = advice_emotion_db.get_emotion4(user_id)
+   print(joy)
+   if (joy[0] != 0 or anger[0] != 0 or sadness[0] != 0 or plesure[0] != 0):
+    categories = ['喜', '怒', '哀', '楽']
+    values = [joy[0],anger[0],sadness[0],plesure[0]]
+    plt.bar(categories, values)
+    id = str(id)
+    graph_path = r'static/img/'+id+'.png'
+    db.update_graph(graph_path,user_id)
+    plt.savefig(graph_path)
+    advice_emotion_db.register_coordinate(joy[0],anger[0],sadness[0],plesure[0],user_id)
+      
+    get_coordinate = advice_emotion_db.get_coordinate(user_id)
+    get_advice = advice_emotion_db.view_advice(get_coordinate[0],get_coordinate[1])
+    post_list = db.get_my_post(user_id)
+    graph = db.get_graph_path(user_id)
+    return render_template('mypage.html',post_list = post_list,name="/static/img/",graph_name=graph[0],advice=get_advice)
+  #  post_list = db.get_my_post(user_id)
+  #  return render_template('mypage.html',post_list = post_list,name="/static/img/")
+  
+
+# パスワード再設定画面の表示
+@app.route('/mail')
+def mail():
+    return render_template('mail.html')
+
+# 入力されたメールアドレスを確認してメールを送る
+@app.route('/send_mail', methods=['POST'])
+def send_mail():
+    email = request.form.get('email')
+    if db.check_email_exists(email):
+        
+        # メールアドレスをセッションに保存
+        session['email'] = email
+        session.permanent = True # session の有効期限を有効化
+        app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
+        return render_template('send_mail.html', email=email)
+    else:
+        return render_template('mail.html', message='メールアドレスが存在しません。')
+      
+#　セッションを確認する
+@app.route('/password_change')
+def password_change():
+    if 'email' in session:
+      return render_template('password_change.html')
+    else:
+      return redirect(url_for('login'))                        
+
+# 入力された２つのパスワードを確認し、パスワードを変更
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    user_mail = session.get('email')
+    password = request.form.get('password')
+    password_check = request.form.get('password_check')
+
+    # パスワードが一致しているか確認
+    # 入力されていない場合
+    if password == '' or password_check == '':
+        return render_template('password_change.html', message='パスワードが入力されていません。')
+    # 入力内容が一致していない場合
+    elif password != password_check:
+        return render_template('password_change.html', message='パスワードが一致しません。')
+    # 入力内容が一致している場合
+    elif password == password_check:
+        # パスワードを変更
+        session.pop('email', None) # session の破棄
+        db.reset_password(password,user_mail)
+        return render_template('password_reset.html',password=password)
+    # それ以外の場合
+    else:
+        return render_template('password_change.html', message='パスワードが一致しません。')
+
+#感情の追加
+@app.route('/add_emotion',methods=['POST'])
+def add_emotion():
+  try:
+    data = request.get_json()
+    user_id = data.get('user_id')
+    post_id = data.get('post_id')
+    emotion = data.get('emotion')
+    result = db.get_emotionos(user_id,post_id)
+    print(user_id)
+    print(post_id)
+    print(emotion)
+    # ユーザーが過去に押したボタンのリストを作成
+    exist_emotions = set()
+    if not result:
+       print("実行2")
+       db.add_emotions(user_id,post_id,emotion)
+       return jsonify({'message':'Success'})   
+    elif result:
+      for db_exist in result:   
+        print("存在する＝",db_exist)   
+        exist_emotions.add(db_exist[3])
+      print("exist=",exist_emotions)
+      # ユーザーが押したタグがリストの中になければタグ付けする
+      if int(emotion) not in exist_emotions:
+        db.add_emotions(user_id,post_id,emotion)
+        return jsonify({'message':'これまで押したことのないタグを登録するよ'})
+      elif result[1] == user_id and result[2] == post_id and result[3] == emotion:
+        # db.delete_emotion(user_id,post_id,emotion)
+        return jsonify({'message':'タグ付けを解除する予定'})
+  except Exception as e:
+    print('実行3')
+    return jsonify({'error':str(e)})
+  return jsonify({'error':"未知のケースです"})
+
 
 #管理者routing
 @app.route('/admin')
@@ -201,7 +357,8 @@ def management():
       session['admin'] = True # session にキー：'user', バリュー:True を追加
       session.permanent = True # session の有効期限を有効化
       app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-      return render_template('account_management.html')
+      user_list = admin_db.get_users()
+      return render_template('account_management.html',user_list=user_list)
     else :
         error = 'ログインに失敗しました。'
         # dictで返すことでフォームの入力量が増えても可読性が下がらない。
@@ -211,26 +368,34 @@ def management():
         }
         return render_template('admin_login.html',error=error,data=input_data)
 
+@app.route('/advice',methods=['GET'])
+def advice():
+  return render_template('register_advice.html')
+  
+@app.route('/register_advice',methods=['POST'])
+def register_advice():
+  advice = request.form.get('advice')
+  emotional_x = request.form.get('x')
+  emotional_y = request.form.get('y')
+  count = admin_db.register_advice(advice,emotional_x,emotional_y)
+  if count == 1:
+    return render_template('register_advice.html')
+  else:
+    msg = '登録できませんでした。'
+    return render_template('register_advice.html',msg=msg)
+    
+#ユーザー一覧
 @app.route('/account_management',methods=['GET'])
 def account_management():
-  return render_template('account_management.html')
-
-@app.route('/register_advice',methods=['GET'])
-def register_advice():
-  return render_template('register_advice.html')
-
-# ユーザ一覧
-@app.route('/user_list')
-def user_list():
-    user_list = admin_db.get_users()
-    return render_template('user_list.html', users=user_list)
+  user_list = admin_db.get_users()
+  return render_template('account_management.html',user_list=user_list)
 
 # ユーザ削除
-@app.route('/user_delete')
+@app.route('/user_delete',methods=['POST'])
 def user_delete():
-    user_name = request.args.get('user_name')
-    admin_db.user_delete(user_name)
-    return redirect(url_for('user_list'))
+    user_id = request.form.get('user_id')
+    admin_db.user_delete(user_id)
+    return redirect(url_for('account_management'))
 
 if __name__ == '__main__':
   app.run(debug=True)

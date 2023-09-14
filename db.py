@@ -19,7 +19,7 @@ def register_user(user_name,user_mail,password):
         
         connection = mysql.connector.connect(**config)
 
-        query = "INSERT INTO user(user_id,user_name,user_mail,user_pass,flag,graph_path,advice_kinds,emotional_x,emotional_y) VALUES(default,%s,%s,%s,default,'/img/test1.png',default,0.5,0.5)"
+        query = "INSERT INTO user(user_id,user_name,user_mail,user_pass,flag,graph_path,advice_kinds,emotional_x,emotional_y) VALUES(default,%s,%s,%s,default,'/img/test1.png',default,default,default)"
 
         # クエリの実行
         cursor = connection.cursor()
@@ -64,6 +64,30 @@ def user_login(user_mail,password):
 
     return flg
 
+def get_flg(user_mail):
+    flg = False
+    try:
+        
+        connection = mysql.connector.connect(**config)
+
+        query = 'SELECT flag FROM user WHERE user_mail = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_mail,))
+        get_pass = cursor.fetchone()
+        if 0 == get_pass[0]:
+            flg = True
+    except mysql.connector.Error:
+        flg = False
+    except Exception:
+        flg = False
+    finally:
+        cursor.close()
+        connection.close()
+
+    return flg
+
 #利用者投稿関数(画像,動画がない場合)
 def user_post(user_id,post,prefecture_id):
     try:
@@ -71,7 +95,6 @@ def user_post(user_id,post,prefecture_id):
         connection = mysql.connector.connect(**config)
 
         query = "INSERT INTO post(post_id,user_id,post,good,prefecture_id,media_path,flag,extension) VALUES(default,%s,%s,default,%s,default,default,default)"
-
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query,(user_id,post,prefecture_id))
@@ -183,7 +206,7 @@ def get_extension(filename):
             # ファイル名を小文字に変換して、拡張子を取得します
             file_extension = filename.lower().split('.')[-1]
 
-            if file_extension in ['png','jpg']:
+            if file_extension in ['png','jpg','gif']:
                 return 1
             elif file_extension == 'mp4':
                 return 2
@@ -205,6 +228,180 @@ def get_my_post(user_id):
         cursor = connection.cursor()
         cursor.execute(query,(user_id,))
         result = cursor.fetchall()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+#感情追加
+def add_emotions(user_id,post_id,emotion):
+    try:
+
+        connection = mysql.connector.connect(**config)
+
+        query = "INSERT INTO emotions(id,user_id,post_id,emotion) VALUES(default,%s,%s,%s)"
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id,emotion))
+        count = cursor.rowcount
+        connection.commit()
+
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        count = 0
+    except Exception as e:
+        print(f"エラー: {e}")
+        count = 0
+    finally:
+        # カーソルを閉じる
+        cursor.close()
+        connection.close()
+
+    return count
+
+#感情重複しないための閲覧
+def get_emotionos(user_id,post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT id,user_id,post_id,emotion FROM emotions WHERE user_id = %s AND post_id = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id))
+        result = cursor.fetchall()
+        print("get_emoのresult=",result)
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def delete_emotion(user_id,post_id,emotion):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'delete * FROM emotions WHERE user_id = %s AND post_id = %s AND emotion = %s'
+
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,post_id,emotion))
+        result = cursor.fetchall()
+        print("del_emoのresult=",result)
+        return None
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+# 登録してあるメールアドレスの検索
+def check_email_exists(email):
+    try:
+        # データベースに接続
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        # メールアドレスを検索
+        cursor.execute("SELECT * FROM user WHERE user_mail = %s", (email,))
+        user = cursor.fetchone()
+
+        if user is None:
+            return False
+        else:
+            return True
+
+    except mysql.connector.Error as error:
+        print(f"Error: {error}")
+    finally:
+        # 接続をクローズ
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def reset_password(password,user_mail):
+    hashed_password = get_hash(password)
+    try:
+        # データベースに接続
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        # パスワードを更新
+        query = "UPDATE user SET user_pass = %s WHERE user_mail = %s"
+        cursor.execute(query,(hashed_password,user_mail,))
+        connection.commit()
+
+    except mysql.connector.Error as error:
+        print(f"Error: {error}")
+    finally:
+        # 接続をクローズ
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+#投稿削除機能
+def delete_post(post_id,user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        delete_query = "UPDATE post SET flag = 1 WHERE post_id = %s AND user_id = %s"
+        cursor.execute(delete_query, (post_id,user_id))
+
+        connection.commit()
+        return True
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
+#グラフ登録
+def update_graph(graph_path,user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        cursor = connection.cursor()
+
+        query = "UPDATE user SET graph_path = %s WHERE user_id = %s"
+        cursor.execute(query, (graph_path,user_id))
+
+        connection.commit()
+        return True
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+    finally:
+        cursor.close()
+        connection.close()
+
+#グラフパス取得
+def get_graph_path(user_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT graph_path FROM user WHERE user_id = %s'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(user_id,))
+        result = cursor.fetchone()
 
         return result
     except mysql.connector.Error as err:

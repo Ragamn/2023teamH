@@ -1,3 +1,4 @@
+@charset 'utf-8';
 html{
     font-size: 16px;
 }
@@ -43,4 +44,7 @@ body{
     max-height: 100vh;
     position: relative;
     min-height: 100vh;
+}
+main{
+    min-height: calc(100vh - 100px);
 }

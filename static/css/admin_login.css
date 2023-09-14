@@ -43,26 +43,16 @@ body{
     position: relative;
     min-height: 100vh;
 }
-main{
-    min-height: calc(100vh - 100px);
-}
-#register{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 .contener{
     background-color: #FFFFFF;
     margin: auto;
     width: 30%;
     padding:2% 5%;
     min-width: 50vh;
+    margin-top: 10%;
 }
 .sub_title{
     text-align: center;
-}
-.interval{
-    height: 24px;
 }
 #form_area{
     display: flex;
