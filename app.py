@@ -51,13 +51,27 @@ def register_exe():
 def login():
   return render_template('login.html')
 
-#利用者ログイン
+@app.route('/home',methods=['GET'])
+def home2():
+    post1 = db.get_all_post()
+    # post = db.get_all_post()
+    post_list = list(post1)
+    # print(type(post_list))
+    # for post_num in post:
+    #   num = 0
+    #   post_list[num][7].append(db.joy_count(post_num[0]))
+    #   post_list[num][8].append(db.anger_count(post_num[0]))
+    #   post_list[num][9].append(db.sadness_count(post_num[0]))
+    #   post_list[num][10].append(db.plesure_count(post_num[0]))
+    #   num += 1
+    # print(post_list)
+    return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+
 @app.route('/home',methods=['POST'])
 def home():
     mail = request.form.get('mail')
     password = request.form.get('password')
-  
-  # ログイン判定
+    # ログイン判定
     if db.user_login(mail, password):
       if db.get_flg(mail):
         user_id = db.get_user_id(mail)
@@ -65,8 +79,7 @@ def home():
         session['user_id'] = user_id[0]
         session.permanent = True # session の有効期限を有効化
         app.permanent_session_lifetime = timedelta(minutes=30)# session の有効期限を5 分に設定
-        post_list = db.get_all_post()
-        return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+        return redirect('/home')
       else:
          error = 'アカウントが削除されています'
          input_data = {
@@ -82,17 +95,14 @@ def home():
           'password':password
         }
         return render_template('login.html',error=error,data=input_data)
+
+   
     
 @app.route('/logout')
 def logout():
   session.pop('user', None) # session の破棄
   session.pop('user_id', None) # session の破棄
   return render_template('index.html')
-      
-@app.route('/post')
-def post():
-  post_list = db.get_all_post()
-  return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
 
 @app.route('/register_post',methods=['POST'])
 def register_post():
@@ -177,13 +187,13 @@ def register_post():
       prefecture_number = prefecture_mapping.get(province, 0)  # 0はデフォルト値（見つからない場合）
       if file.filename == '':
         db.user_post(user_id,post,prefecture_number)
-        return redirect('/post')
+        return redirect('/home')
       else:
         if(db.get_extension(file.filename)):
           file.save('static/img/'+file.filename)
           extension = db.get_extension(file.filename)
           db.user_post_img(user_id,post,prefecture_number,file.filename,extension)
-          return redirect('/post')
+          return redirect('/home')
         else:
           msg = '対応していない拡張子のファイルがふくまれています'
           post_list = db.get_all_post()
