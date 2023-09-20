@@ -181,11 +181,12 @@ def get_location_from_latlng(latitude, longitude):
 def get_all_post():
     try:
         connection = mysql.connector.connect(**config)
-        query = 'SELECT post.post_id,user.user_name,post.post,post.good,post.prefecture_id,post.media_path,post.created_at,post.extension FROM post INNER JOIN user ON user.user_id = post.user_id WHERE post.flag = 0'
+        query = 'SELECT post.post_id,user.user_name,post.post,post.good,post.prefecture_id,post.media_path,post.created_at,post.extension FROM post INNER JOIN user ON user.user_id = post.user_id WHERE post.flag = 0 ORDER BY post.post_id DESC'
 
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query)
+        result = []
         result = cursor.fetchall()
 
         return result
@@ -222,7 +223,7 @@ def get_extension(filename):
 def get_my_post(user_id):
     try:
         connection = mysql.connector.connect(**config)
-        query = 'SELECT post.post_id,user.user_name,post.post,post.good,post.prefecture_id,post.media_path,post.created_at,post.extension FROM post INNER JOIN user ON user.user_id = post.user_id WHERE post.flag = 0 AND post.user_id = %s'
+        query = 'SELECT post.post_id,user.user_name,post.post,post.good,post.prefecture_id,post.media_path,post.created_at,post.extension FROM post INNER JOIN user ON user.user_id = post.user_id WHERE post.flag = 0 AND post.user_id = %s ORDER BY post.post_id DESC'
 
         # クエリの実行
         cursor = connection.cursor()
@@ -402,6 +403,113 @@ def get_graph_path(user_id):
         cursor = connection.cursor()
         cursor.execute(query,(user_id,))
         result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+#感情リアクションの値取り出し
+def joy_count(post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT count(*) FROM emotions WHERE post_id = %s AND emotion = 1'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(post_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def anger_count(post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT count(*) FROM emotions WHERE post_id = %s AND emotion = 2'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(post_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def sadness_count(post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT count(*) FROM emotions WHERE post_id = %s AND emotion = 3'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(post_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+def plesure_count(post_id):
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT count(*) FROM emotions WHERE post_id = %s AND emotion = 4'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query,(post_id,))
+        result = cursor.fetchone()
+
+        return result
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
+
+#投稿のid取得関数
+def get_post_id():
+    try:
+        connection = mysql.connector.connect(**config)
+        query = 'SELECT post_id FROM emotions WHERE flag = 0'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
 
         return result
     except mysql.connector.Error as err:
