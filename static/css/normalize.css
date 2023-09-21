@@ -1,3 +1,11 @@
+html{
+  font-size: 16px;
+}
+html,body{
+  margin:0;
+  padding:0
+}
+
 .header{
   display: flex;
   flex-direction: initial;
@@ -8,9 +16,10 @@
 }
 body{
   background-color: #FFF1DB;
-  max-height: 100vh;
+  /* max-height: 100vh; */
   position: relative;
   min-height: 100vh;
+  padding:0 0 50px;
 }
 .contener {
   margin: 30px 0;

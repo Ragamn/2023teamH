@@ -12,40 +12,42 @@
     <a href="{{url_for('post')}}">home</a>
 </header>
 <body>
-    {% if post_list[0] is defined and post_list[0] is not none%}
-    名前{{post_list[0][1]}}
-    {% endif %}
-    <div class="advice">{{advice}}</div> 
+
     <img class="graph" src="{{graph_name}}" alt="グラフがありません">
+    <div class="advice">{{advice}}</div> 
+    
     <table>
-    {% for post in post_list %}
-    <tr>
-        <div class="post">
-            {{post[2]}}
-            {{post[6]}}
-            <form action="{{url_for('delete_post')}}"method='POST'>
-                <input type="hidden" value="{{post[0]}}" name="post_id">
-                <button type="submit">削除</button>
-            </form>
-        </div>
-
-        {% if post[5] is defined and post[5] is not none%}
-            {% if post[7] == 1 %}
-            <div><img src="{{name+post[5]}}" alt="代替テキスト"></div>
-            {% endif %}
-            {% if post[7] == 2 %}
-            <div><video width="640" height="360" src="{{name+post[5]}}" alt="代替テキスト"controls></div>
-            {% endif %}
-            {% if post[7] == 3 %}
-            <div><audio src="{{name+post[5]}}" alt="代替テキスト"controls></div>
-            {% endif %}
-        {% endif %}
-
-    </tr>
-    {% endfor %}
+        {% for post in post_list %}
+        <tr>
+            <div class="post">
+                <p>名前</p>
+                    {% if post_list[0] is defined and post_list[0] is not none%}
+                    名前{{post_list[0][1]}}
+                    {% endif %}
+                    {{post[2]}}
+                    {{post[6]}}
+                    <form action="{{url_for('delete_post')}}"method='POST'>
+                        <input type="hidden" value="{{post[0]}}" name="post_id">
+                        <button type="submit">削除</button>
+                    </form>
+                    
+                    {% if post[5] is defined and post[5] is not none%}
+                    {% if post[7] == 1 %}
+                    <div><img src="{{name+post[5]}}" alt="代替テキスト"></div>
+                    {% endif %}
+                    {% if post[7] == 2 %}
+                    <div><video width="640" height="360" src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+                        {% endif %}
+                        {% if post[7] == 3 %}
+                        <div><audio src="{{name+post[5]}}" alt="代替テキスト"controls></div>
+                            {% endif %}
+                            {% endif %}
+                </div>
+            </tr>
+        {% endfor %}
     </table>
-<footer class="footer">
-    <p></p>
-  </footer>
+    <footer class="footer">
+        <p></p>
+      </footer>
 </body>
 </html>

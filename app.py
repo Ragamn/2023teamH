@@ -274,7 +274,7 @@ def send_mail():
     else:
         return render_template('mail.html', message='メールアドレスが存在しません。')
       
-#　セッションを確認する
+# セッションを確認する
 @app.route('/password_change')
 def password_change():
     if 'email' in session:
