@@ -53,6 +53,7 @@ def login():
 
 @app.route('/home',methods=['GET'])
 def home2():
+    user_id = session.get('user_id')
     post_list1 = db.get_all_post()
     list = []
     print('ひとつめ')
@@ -68,7 +69,7 @@ def home2():
        statistics = statistics + ('哀',)
     elif statistics[1] == 4:
        statistics = statistics + ('楽',)
-    return render_template('post.html',post_list = list,name="/static/img/",user_id=session['user_id'],statistics=statistics)
+    return render_template('post.html',post_list = list,name="/static/img/",user_id=user_id,statistics=statistics)
 
 @app.route('/home',methods=['POST'])
 def home():
