@@ -186,7 +186,6 @@ def get_all_post():
         # クエリの実行
         cursor = connection.cursor()
         cursor.execute(query)
-        result = []
         result = cursor.fetchall()
 
         return result
