@@ -521,3 +521,31 @@ def get_post_id():
     finally:
         cursor.close()
         connection.close()
+
+def get_many_emotion():
+    try:
+        connection = mysql.connector.connect(**config)
+        query1 = 'SELECT emotion, count(*) as count from emotions GROUP BY emotion order by count desc limit 1'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query1)
+        result1 = cursor.fetchone()
+
+        query2= 'SELECT prefecture, emotion, COUNT(*) AS count FROM post as p INNER JOIN emotions AS e on p.post_id = e.post_id INNER JOIN prefecture AS pr on p.prefecture_id = pr.id WHERE emotion = %s GROUP BY prefecture_id, emotion ORDER BY COUNT DESC LIMIT 1'
+        
+        # クエリの実行
+        cursor = connection.cursor()
+        cursor.execute(query2,(result1[0],))
+        result2 = cursor.fetchone()
+
+        return result2
+    except mysql.connector.Error as err:
+        print(f"MySQLエラー: {err}")
+        return None
+    except Exception as e:
+        print(f"エラー: {e}")
+        return None
+    finally:
+        cursor.close()
+        connection.close()
