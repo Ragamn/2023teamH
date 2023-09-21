@@ -65,7 +65,16 @@ def home2():
     #   post_list[num][10].append(db.plesure_count(post_num[0]))
     #   num += 1
     # print(post_list)
-    return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'])
+    statistics = db.get_many_emotion()
+    if statistics[1] == 1:
+       statistics = statistics + ('喜',)
+    elif statistics[1] == 2:
+       statistics = statistics + ('怒',)
+    elif statistics[1] == 3:
+       statistics = statistics + ('哀',)
+    elif statistics[1] == 4:
+       statistics = statistics + ('楽',)
+    return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'],statistics=statistics)
 
 @app.route('/home',methods=['POST'])
 def home():
