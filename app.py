@@ -53,18 +53,13 @@ def login():
 
 @app.route('/home',methods=['GET'])
 def home2():
-    post1 = db.get_all_post()
-    # post = db.get_all_post()
-    post_list = list(post1)
-    # print(type(post_list))
-    # for post_num in post:
-    #   num = 0
-    #   post_list[num][7].append(db.joy_count(post_num[0]))
-    #   post_list[num][8].append(db.anger_count(post_num[0]))
-    #   post_list[num][9].append(db.sadness_count(post_num[0]))
-    #   post_list[num][10].append(db.plesure_count(post_num[0]))
-    #   num += 1
-    # print(post_list)
+    user_id = session.get('user_id')
+    post_list1 = db.get_all_post()
+    list = []
+    print('ひとつめ')
+    for post_list1 in post_list1:
+        list += (post_list1[0],post_list1[1], post_list1[2], post_list1[3], post_list1[4], post_list1[5], post_list1[6], post_list1[7],((db.joy_count(post_list1[0])[0],db.anger_count(post_list1[0])[0],db.sadness_count(post_list1[0])[0],db.plesure_count(post_list1[0])[0]))),
+    print(list)
     statistics = db.get_many_emotion()
     if statistics[1] == 1:
        statistics = statistics + ('喜',)
@@ -74,7 +69,7 @@ def home2():
        statistics = statistics + ('哀',)
     elif statistics[1] == 4:
        statistics = statistics + ('楽',)
-    return render_template('post.html',post_list = post_list,name="/static/img/",user_id=session['user_id'],statistics=statistics)
+    return render_template('post.html',post_list = list,name="/static/img/",user_id=user_id,statistics=statistics)
 
 @app.route('/home',methods=['POST'])
 def home():
