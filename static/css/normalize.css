@@ -15,10 +15,9 @@ html,body{
 }
 body{
   background-color: #FFF1DB;
-  /* max-height: 100vh; */
+  max-height: 100vh;
   position: relative;
   min-height: 100vh;
-  padding:0 0 50px;
 }
 
 .contener {
